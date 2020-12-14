@@ -1,2 +1,2 @@
 # Laboratory Management
-https://woolcock-irm.github.io/lab/
+https://woolcock-imr.github.io/lab/
