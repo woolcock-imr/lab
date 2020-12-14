@@ -1,0 +1,51 @@
+﻿<div id=D__ID>
+    <section id=form_container__ID>
+    	<div id=header__ID>
+    		Processing Communal Order
+    	</div>
+    	<form id=F__ID>
+    		<div class="container">
+    			<div class="row row__ID">
+    				<div class=col>
+    					<span>I,  <span id=name__ID></span>, have processed this request</span>
+    				</div>
+    			</div>
+    			<br>
+    			<div class="row">
+    				<div class=col>
+    					<button id=submit__ID class="btn btn-secondary">Submit</button>
+    				</div>
+    			</div>
+    		</div>
+    	</form>
+    </section>
+    <script>
+    	function F__ID(){
+    		//-------------------------------------
+			VmInclude:__COMPONENT__/f/form.01.js
+    		//-------------------------------------
+			var old_m_load=m.load;
+			m.load=function(){
+				var nm=$vm.displayname;
+				if(nm==undefined || nm=="") nm=$vm.user_name;
+				$('#name__ID').text(nm);
+				old_m_load();
+			}      
+    		//-------------------------------------
+            m.before_submit=function(data,index){
+				$vm["_sys_refresh_"+m.parent_table]=1; 			//force parent module to refresh
+				if(m.input!=undefined){
+					index.A=m.input.A; 						//parent A -> A, transfer self permission
+					index.I2=m.input.UID; 					//parent UID -> I2, build relation
+				}
+            }
+    		//-------------------------------------
+    	}
+    </script>
+    <style>
+        #form_container__ID{
+            max-width:800px;
+        }
+        VmInclude:__COMPONENT__/f/form.01.css
+    </style>
+</div>
