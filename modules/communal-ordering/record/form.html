@@ -159,6 +159,24 @@
                 return true;
             }
 			//-------------------------------------
+			m.after_insert=function(data,res){
+				if(data.Status=='Submit'){
+					var req={cmd:'flow',flowid:'flow_lab_order_submitted',data:data}
+					$vm.request(req,function(res){
+						$vm.refresh=1;
+						m.change_status++;
+						if(m.input.goback!=undefined) window.history.go(-1);            //from grid
+						else $vm.alert('Your data has been successfully submitted');    //standalone
+					});
+				}
+				else{
+					$vm.refresh=1;
+					m.change_status++;
+					if(m.input.goback!=undefined) window.history.go(-1);            //from grid
+					else $vm.alert('Your data has been successfully submitted');    //standalone
+				}
+			}
+			//-------------------------------------
 			$('#c__ID').on('click',function(){
 				var v=$('#F__ID input[name=Type]:checked').val();
 				if(v=="Chemical"){ 

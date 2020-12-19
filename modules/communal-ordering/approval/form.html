@@ -7,15 +7,15 @@
     		<div>
     			<div w=100>
 					<span>I,  <b><span id=name__ID ></span></b>, 
-						<label><input type=radio name=action value=approve required > approve</label> 
-						<label><input type=radio name=action value=denay > denay</label> 
+						<label><input type=radio name=Action value=approve required > approve</label> 
+						<label><input type=radio name=Action value=denay > denay</label> 
 					this request</span>
 				</div>
 			</div>
     		<div>
     			<div w=100>
-					<span>If denaied what is the reasion?</span>
-					<textarea name=Reasion style='height:200px'></textarea>
+					<span>If denaied what is the reason?</span>
+					<textarea name=Reason style='height:200px'></textarea>
     			</div>
 			</div>
     		<div>
@@ -32,12 +32,18 @@
     		//-------------------------------------
 			var old_m_load=m.load;
 			m.load=function(){
-				var nm=$vm.displayname;
-				if(nm==undefined || nm=="") nm=$vm.user_name;
-				$('#name__ID').text(nm);
 				old_m_load();
 				if(m.input!=undefined && m.input.readonly==1){
 					$('#submit__ID').hide();
+				}
+				if(m.input!=undefined && m.input.record!=undefined){
+					var nm=m.input.record.Submitted_by;
+					$('#name__ID').text(nm);
+				}
+				if(m.input!=undefined && m.input.record==undefined){
+					var nm=$vm.displayname;
+					if(nm==undefined || nm=="") nm=$vm.user_name;
+					$('#name__ID').text(nm);
 				}
 			}      
     		//-------------------------------------
@@ -50,6 +56,21 @@
                 return true;
             }
     		//-------------------------------------
+			m.after_insert=function(data,res){
+				var d={
+					"Action":data.Action, "Action_performed_by":$vm.user_name,"Date":new Date().toLocaleString(),"Request_ID":m.input.UID,Reason:data.Reason,
+					Requestor_Email:m.input.parent.Data.Requestor_Email,
+					Requestor_Name:m.input.parent.Data.Requestor_Name
+				}
+				var req={cmd:'flow',flowid:'flow_lab_order_approved',data:d}
+				$vm.request(req,function(res){
+					$vm.refresh=1;
+					m.change_status++;
+					if(m.input.goback!=undefined) window.history.go(-1);            //from grid
+					else $vm.alert('Your data has been successfully submitted');    //standalone
+				});
+			}
+			//-------------------------------------
     	}
     </script>
     <style>

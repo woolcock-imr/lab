@@ -13,6 +13,8 @@
                 <ul>
                     <li><a href="?/home"><i class="fa fa-home"></i> Home</a></li>
                     <li><a href="?/management">Management</a></li>
+                    <li><a href="" id=signin__ID ><i class="fa fa-user"></i> Sigin</a></li>
+                    <li><a href="" id=signout__ID ><i class="fa fa-user"></i> Sigout</a></li>
                 </ul>
             </div>
         </div>    
@@ -28,10 +30,9 @@
         </div>
     </div>    
     <div style='padding:3px 0 4px 10px;background-color: #e5e9ec;font-size:13px;' id=nav__ID></div>
-    <div style='display:none'><iframe id=auth__ID ></iframe></div>
     <script>
         function F__ID(){
-            $('#auth__ID').attr('src',$vm.auth_address+"/auth.html")
+            $('#auth__ID').attr('src',$vm.api_address+"auth.html")
             //--------------------------------------
             $vm.header_ready=1;
             if($vm.resize_content!=undefined) $vm.resize_content();
@@ -101,6 +102,18 @@
                 }
             })
             //--------------------------------------
+            $('#signin__ID').on('click',function(){
+                $vm.m365_signin();  
+            })
+            //------------------------------------
+            $('#signout__ID').on('click',function(){
+                $vm.clear_token();
+                $vm.user_name="";
+                $vm.m365_signout();  
+                //$vm.show_user();
+                location.reload();
+            })
+            //------------------------------------
             $vm.show_user=function(){
                 if($vm.user_name==undefined || $vm.user_name=='guest'){
                     $('#username__ID').text('');
@@ -114,40 +127,29 @@
                 }
             }
             //------------------------------------
-            window.onmessage=function(e){
-                if(e.data.vm_auth!=undefined){
-                    $vm.set_token(e.data.vm_auth.token);
-                    $vm.user_name=e.data.vm_auth.user_name;
-                    $vm.displayname=e.data.vm_auth.displayname;
-                    $vm.groups=e.data.vm_auth.groups;
-                    $vm.show_user();
+            $vm.exchange_microsoft_token=function(){
+                if($vm.microsoft_token!=undefined){
+                    $vm.request({cmd:'exchange-microsoft-token',token:$vm.microsoft_token},function(res){
+                        if(res.status=='ok'){
+                            $vm.user_name=res.result.user_name;
+                            $vm.displayname=res.result.displayname;
+                            $vm.set_token(res.result.token,res.result.username);
+                            $vm.show_user();
+                            var t=JSON.parse(res.result.token.split('|')[0]);
+                            $vm.groups=t.groups;
+                        }
+                    })
                 }
-            };
+            }
             //------------------------------------
-            /*
+            $vm.app_after_3rd_signin=function(){
+                $vm.exchange_microsoft_token();
+            }
+            //------------------------------------
             $vm.init(function(){
                 $vm.init_status=1;
-                if($vm.user_name==undefined || $vm.user_name=='guest'){
-                    var xhttp = new XMLHttpRequest();
-                    xhttp.onreadystatechange = function() {
-                        if (this.readyState == 4 && this.status == 200) {
-                            var t="";
-                            try{ 
-                                t=JSON.parse(xhttp.responseText);
-                                $vm.set_token(t.sys.token);
-                                location.reload(true);
-                            }
-                            catch(e){
-                                alert("Faild.")
-                            }
-                        }
-                    };
-                    xhttp.open("GET", "/auth", true);
-                    xhttp.send();                
-                }
                 $vm.show_user();
             })
-            */
             //------------------------------------
             $vm.sys_nav_path=function(){
                 var L=$vm.page_stack.length;

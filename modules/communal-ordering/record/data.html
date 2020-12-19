@@ -32,7 +32,7 @@
                     if(records[I].Data.Status=='Submit'){
                         td.html("<u style='cursor:pointer'>Approving</u>");
                         td.find('u').on('click',function(){
-                            $vm.show_module(m.approval,{UID:records[I].UID,A:records[I].A,goback:1})
+                            $vm.show_module(m.approval_module,{UID:records[I].UID,A:records[I].A,goback:1,parent:records[I]})
                         });
                     }
                     break;
@@ -40,14 +40,14 @@
                     if(records[I].Data.Status=='Submit'){
                         td.html("<u style='cursor:pointer'>Processing</u>");
                         td.find('u').on('click',function(){
-                            $vm.show_module(m.process,{UID:records[I].UID,A:records[I].A,goback:1})
+                            $vm.show_module(m.process_module,{UID:records[I].UID,A:records[I].A,goback:1,parent:records[I]})
                         });
                     }
                     break;
                 case '_Received':
                     td.html("<u style='cursor:pointer'>Action</u>");
                     td.find('u').on('click',function(){
-                        $vm.show_module(m.receive,{self:m.self,UID:records[I].UID,A:records[I].A,goback:1})
+                        $vm.show_module(m.receive_module,{self:m.self,UID:records[I].UID,A:records[I].A,goback:1,parent:records[I]})
                     });
                     break;
             }
@@ -80,13 +80,14 @@
                 $("#grid__ID td[data-id=_Approved]").each(function(index){
                     if(m.records[index].sys_temp_1!=undefined){
                         tt="";
-                        if(m.records[index].sys_temp_1.Data.action=='approve') tt="<i rid="+index+" style='color:green;padding-left:10px;cursor:pointer' class='fas fa-check'></i>"
-                        if(m.records[index].sys_temp_1.Data.action=='denay')   tt="<i rid="+index+" style='color:red;padding-left:10px;cursor:pointer' class='fas fa-times'></i>"
+                        if(m.records[index].sys_temp_1.Data.Action=='approve') tt="<i rid="+index+" style='color:green;padding-left:10px;cursor:pointer' class='fas fa-check'></i>"
+                        if(m.records[index].sys_temp_1.Data.Action=='denay')   tt="<i rid="+index+" style='color:red;padding-left:10px;cursor:pointer' class='fas fa-times'></i>"
                         $(this).html(tt);
                         $(this).find('i').on('click',function(){
                             var k=parseInt($(this).attr('rid'));
-                            if(m.self==1) $vm.show_module(m.approval_module,{readonly:1,record:m.records[k].sys_temp_1});
-                            else $vm.show_module(m.approval_module,{readonly:readonly,record:m.records[k].sys_temp_1});
+                            //if(m.self==1) 
+                            $vm.show_module(m.approval_module,{readonly:1,record:m.records[k].sys_temp_1,parent:m.records[k]});
+                            //else $vm.show_module(m.approval_module,{readonly:readonly,record:m.records[k].sys_temp_1});
                         })
                     }
                     if(m.records[index].sys_temp_1==undefined || m.records[index].sys_temp_1.Data.action=='denay' ){
@@ -113,12 +114,13 @@
                 //rendering the column
                 $("#grid__ID td[data-id=_Processed]").each(function(index){
                     if(m.records[index].sys_temp_2!=undefined){
-                        var tt="<i rid="+index+" style='color:red;padding-left:10px;cursor:pointer' class='fas fa-check'></i>"
+                        var tt="<i rid="+index+" style='color:green;padding-left:10px;cursor:pointer' class='fas fa-check'></i>"
                         $(this).html(tt);
                         $(this).find('i').on('click',function(){
                             var k=parseInt($(this).attr('rid'));
-                            if(m.self==1) $vm.show_module(m.process_module,{readonly:1,record:m.records[k].sys_temp_2});
-                            else $vm.show_module(m.process_module,{readonly:readonly,record:m.records[k].sys_temp_2});
+                            //if(m.self==1) 
+                            $vm.show_module(m.process_module,{readonly:1,record:m.records[k].sys_temp_2,parent:m.records[k]});
+                            //else $vm.show_module(m.process_module,{readonly:readonly,record:m.records[k].sys_temp_2});
                         })
                     }
                     else{
@@ -142,14 +144,15 @@
                     }
                 }
                 //rendering the column
-                $("#grid__ID td[data-id=_Processed]").each(function(index){
+                $("#grid__ID td[data-id=_Received]").each(function(index){
                     if(m.records[index].sys_temp_3!=undefined){
-                        var tt="<i rid="+index+" style='color:red;padding-left:10px;cursor:pointer' class='fas fa-check'></i>"
+                        var tt="<i rid="+index+" style='color:green;padding-left:10px;cursor:pointer' class='fas fa-check'></i>"
                         $(this).html(tt);
                         $(this).find('i').on('click',function(){
                             var k=parseInt($(this).attr('rid'));
-                            if(m.self==1) $vm.show_module(m.receive_module,{readonly:1,record:m.records[k].sys_temp_3});
-                            else $vm.show_module(m.receive_module,{readonly:readonly,record:m.records[k].sys_temp_3});
+                            //if(m.self==1) 
+                            $vm.show_module(m.receive_module,{readonly:1,record:m.records[k].sys_temp_3,parent:m.records[k]});
+                            //else $vm.show_module(m.receive_module,{readonly:readonly,record:m.records[k].sys_temp_3});
                         })
                     }
                 });
