@@ -1,6 +1,5 @@
 $vm.m365_init=function(){
     var h=window.location.href.substring(0, window.location.href.split('?')[0].lastIndexOf('/'));
-    alert(h)
     $vm.m365_scope={
         scopes: ["user.read"]
     };
