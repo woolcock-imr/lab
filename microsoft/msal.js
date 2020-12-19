@@ -1,8 +1,6 @@
 $vm.m365_init=function(){
-    var h=window.location.protocol+"//"+window.location.hostname;
-    var p=window.location.port;
-    if(p!="") h=h+":"+p;
-    if(h.indexOf('projects.vmiis.com')!=-1) h=h+"/sites";
+    var h=window.location.href.substring(0, window.location.href.split('?')[0].lastIndexOf('/'));
+    alert(h)
     $vm.m365_scope={
         scopes: ["user.read"]
     };
