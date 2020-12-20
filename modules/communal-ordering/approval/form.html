@@ -33,17 +33,20 @@
 			var old_m_load=m.load;
 			m.load=function(){
 				old_m_load();
-				if(m.input!=undefined && m.input.readonly==1){
-					$('#submit__ID').hide();
-				}
-				if(m.input!=undefined && m.input.record!=undefined){
-					var nm=m.input.record.Submitted_by;
-					$('#name__ID').text(nm);
-				}
-				if(m.input!=undefined && m.input.record==undefined){
-					var nm=$vm.displayname;
-					if(nm==undefined || nm=="") nm=$vm.user_name;
-					$('#name__ID').text(nm);
+				if(m.input!=undefined){
+					if(m.input.readonly==1){
+						$('#submit__ID').hide();
+					}
+					if(m.input.record!=undefined){
+						var nm=m.input.record.Submit_name;
+						if(nm==undefined) nm=m.input.record.Submitted_by;
+						$('#name__ID').text(nm);
+					}
+					else if(m.input.record==undefined){
+						var nm=$vm.displayname;
+						if(nm==undefined || nm=="") nm=$vm.user_name;
+						$('#name__ID').text(nm);
+					}
 				}
 			}      
     		//-------------------------------------
