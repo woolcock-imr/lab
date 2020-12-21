@@ -7,7 +7,7 @@ $vm.m365_init=function(){
         auth: {
             clientId: '2219c626-e431-469b-857b-9df33fd7fb6e', 
             authority: "https://login.microsoftonline.com/common",
-            redirectUri:h+"/microsoft/woolcock2.html",
+            redirectUri:h+"/microsoft/msal.html",
         },
         cache: {
             cacheLocation: "localStorage",
