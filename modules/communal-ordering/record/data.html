@@ -66,6 +66,11 @@
             var cmd="find"; 
             var req={cmd:cmd,table:m.approval_table,query:query,options:options}
             $vm.request(req,function(res){
+                if(res.status=='np'){
+                    $("#grid__ID td[data-id=_Approved]").each(function(index){
+                        $(this).html('');
+                    })
+                }
                 if(res.result.length!=undefined){
                     for(var k=0;k<res.result.length;k++){
                         for(var j=0;j<m.records.length;j++){
@@ -101,6 +106,11 @@
             var cmd="find"; 
             var req={cmd:cmd,table:m.process_table,query:query,options:options}
             $vm.request(req,function(res){
+                if(res.status=='np'){
+                    $("#grid__ID td[data-id=_Processed]").each(function(index){
+                        $(this).html('');
+                    })
+                }
                 if(res.result.length!=undefined){
                     for(var k=0;k<res.result.length;k++){
                         for(var j=0;j<m.records.length;j++){
@@ -133,6 +143,11 @@
             var cmd="find"; 
             var req={cmd:cmd,table:m.receive_table,query:query,options:options}
             $vm.request(req,function(res){
+                if(res.status=='np'){
+                    $("#grid__ID td[data-id=_Received]").each(function(index){
+                        $(this).html('');
+                    })
+                }
                 if(res.result.length!=undefined){
                     for(var k=0;k<res.result.length;k++){
                         for(var j=0;j<m.records.length;j++){
