@@ -128,6 +128,10 @@
 			//-------------------------------------
 			var old_m_load=m.load;
 			m.load=function(){
+				if($vm.user_name=="guest"){
+					alert("You haven't login.");
+					return;
+				}
 				old_m_load();
 				if(m.input.record!=undefined && m.input.record.Data.Status=="Submit"){
 					$('#draft__ID').hide();
