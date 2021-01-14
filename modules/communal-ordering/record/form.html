@@ -22,91 +22,6 @@
 					<input type=date name=Date ></input>
 				</div>
 			</div>
-			<div>
-				<div w='100|100'>
-					<span>4. What are you requesting</span><br>
-					<div style="padding-left:20px" id=c__ID>
-						<label class=r__ID><input type=radio name=Type value=Chemical required></input><span></span> Chemical</label><br>
-						<label class=r__ID><input type=radio name=Type value=Consumable></input><span></span> Consumable</label>
-					</div>
-				</div>
-			</div>
-			<section id=part_1__ID style='display:none'>
-				<div>
-					<div w='100|100'>
-						<span>5. Chemical requested</span>
-						<select name=Chemical_requested>
-							<option value="" disabled selected>Select your answer</option>
-							<option>Glacial acetic acid</option>
-							<option>Agarose (Molecular Biology Grade)</option>
-							<option>APS (ammonium persulfate)</option>
-							<option>Beta Mercaptoethanol</option>
-							<option>Calcium Chloride</option>
-							<option>Citric acid</option>
-							<option>Conc HCl (molecular biology grade)</option>
-							<option>D (+) Glucose monohydrate</option>
-							<option>D (+) Galactose</option>
-							<option>Dextrandi-sodium hydrogen orthophosphate</option>
-							<option>EDTA</option>
-							<option>100% Ethanol (molecular biology grade)</option>
-							<option>Ethylene glycolGelatin</option>
-							<option>GlycineGuanidine hydrochloride</option>
-							<option>HEPES</option>
-							<option>Hydroxyethyl cellulose</option>
-							<option>Hydroxypropyl cellulose</option>
-							<option>Hydroxypropyl methyl cellulose</option>
-							<option>Imidazole</option>
-							<option>Isopropanol (Mol Bio Grade)</option>
-							<option>Magnesium chloride (Anhydrous)</option>
-							<option>Methanol (molecular biology grade)</option>
-							<option>Methyl Cellulose</option>
-							<option>Phenylmethylsulfonyl fluoride</option>
-							<option>Sodium phosphate (Dibasics - Molecular biology grade)</option>
-							<option>Phosphate buffered Saline (PBS)</option>
-							<option>Postassium chloride</option>
-							<option>Sodium biocarbonate (Molecular biology grade - powder)</option>
-							<option>Sodium carbonate</option>
-							<option>Sodium chloride</option>
-						</select>
-					</div>
-				</div>
-				<div>
-					<div w='100|100'>
-						<span>6. Quantity requested</span>
-						<br><span style='font-size: 11px; font-style: italic;'>Please mention number of bags / carton for consumables and volume / weight of chemicals</span>
-						<input type="text" name=Quantity_requested />
-					</div>
-				</div>
-				<div>
-					<div w='100|100'>
-						<span>7. Preferred supplier</span>
-						<br><span style='font-size: 11px; font-style: italic;'>Please write NA if no preference</span>
-						<input type="text" name=Preferred_supplier />
-					</div>
-				</div>
-				<div>
-					<div w='100|100'>
-						<span>8. Notes</span>
-						<textarea name=Notes style='height:200px' ></textarea>
-					</div>
-				</div>
-			</section>
-			<section id=part_2__ID style='display:none'>
-				<div>
-					<div w='100|100'>
-						<span>5. Consumable requested</span>
-						<select name=Consumable_requested >
-							<option value="" disabled selected>Select your answer</option>
-							<option>1.5mL Eppendorf tube</option>
-							<option>15mL Falcon tube</option>
-							<option>50mL Falcon tube</option>
-							<option>5mL serological pipette</option>
-							<option>10mL serological pipette</option>
-							<option>25mL serological pipette</option>
-						</select>
-					</div>
-				</div>
-			</section>
 			<section style='display:none'>
 				<input type="text" name=Status  />
 			</section>
@@ -137,33 +52,20 @@
 					$('#draft__ID').hide();
 					$('#submit__ID').hide();
 				}
-				if(m.input.record!=undefined){
-					var v=$('#F__ID input[name=Type]:checked').val();
-					if(v=="Chemical"){ 
-						$('#part_1__ID').show(); $('#part_2__ID').hide(); 
-						$("#part_1__ID select").prop("required",true);
-						$("#part_1__ID input").prop("required",true);
-						$("#part_2__ID select").prop("required",false);
-					}
-					if(v=="Consumable"){ 
-						$('#part_2__ID').show(); $('#part_1__ID').hide(); 
-						$("#part_1__ID select").prop("required",false);
-						$("#part_1__ID input").prop("required",false);
-						$("#part_2__ID select").prop("required",true);
-					}
-				}
 			}      
 			$('#draft__ID').on('click',function(){	$("#F__ID input[name='Status']").val('Draft');  m.options.lock=0; $('#trigger__ID').trigger( "click" ); })
 			$('#submit__ID').on('click',function(){	$("#F__ID input[name='Status']").val('Submit'); m.options.lock=1; $('#trigger__ID').trigger( "click" ); })
 			//-------------------------------------
             m.before_submit=function(data,index){
-				if(m.input.record==undefined){ //only for add
+				if(m.input.record==undefined){ 		//only for add
 					index.A=$vm.user_name; 
 				}
                 return true;
             }
 			//-------------------------------------
-			m.after_insert=function(data,res){
+			m.after_insert=function(data,res){ after_submit(data,res); }
+			m.after_update=function(data,res){ after_submit(data,res); }
+			var after_submit=function(data,res){
 				if(data.Status=='Submit'){
 					var req={cmd:'flow',flowid:'flow_lab_order_submitted',data:data}
 					$vm.request(req,function(res){
@@ -181,21 +83,6 @@
 				}
 			}
 			//-------------------------------------
-			$('#c__ID').on('click',function(){
-				var v=$('#F__ID input[name=Type]:checked').val();
-				if(v=="Chemical"){ 
-					$('#part_1__ID').show(); $('#part_2__ID').hide(); 
-					$("#part_1__ID select").prop("required",true);
-					$("#part_1__ID input").prop("required",true);
-					$("#part_2__ID select").prop("required",false);
-				}
-				if(v=="Consumable"){ 
-					$('#part_2__ID').show(); $('#part_1__ID').hide(); 
-					$("#part_1__ID select").prop("required",false);
-					$("#part_1__ID input").prop("required",false);
-					$("#part_2__ID select").prop("required",true);
-				}
-			})
 		}
     </script>
     <style>

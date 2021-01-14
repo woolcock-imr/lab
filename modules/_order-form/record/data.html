@@ -1,0 +1,185 @@
+﻿<section>
+    VmInclude:__COMPONENT__/g/grid.01.html
+</section>
+<script>
+    function F__ID(){
+        //-------------------------------------
+        VmInclude:__COMPONENT__/g/grid.01.js
+        //-------------------------------------
+        var fields="Requestor_Name, Date, Type,Chemical_requested,Quantity_requested,Preferred_supplier,Consumable_requested, Status";
+        m.fields="_Form,_Request_ID,"+fields+",Submit_date,Submitted_by,_Approved,_Processed,_Received,_Delete";
+        //-------------------------------------
+        m.load=function(){
+            if(m.self==1) m.options={self:1};
+        }
+        //-------------------------------------
+        m.before_submit=function(data,index){
+            if(m.input==undefined){
+                index.A=$vm.user_name; 
+            }
+            return true;
+        }
+        //-------------------------------------
+        m.cell_render=function(records,I,field,td){
+            switch(field){
+                case '_Request_ID':
+                    td.html(records[I].UID);
+                    break;
+                case "_Delete":
+                    if(records[I].Data.Status=='Submit') td.html('');
+                    break;
+                case '_Approved':
+                    if(records[I].Data.Status=='Submit'){
+                        td.html("<u style='cursor:pointer'>Approving</u>");
+                        td.find('u').on('click',function(){
+                            $vm.show_module(m.approval_module,{UID:records[I].UID,A:records[I].A,goback:1,parent:records[I]})
+                        });
+                    }
+                    break;
+                case '_Processed':
+                    if(records[I].Data.Status=='Submit'){
+                        td.html("<u style='cursor:pointer'>Processing</u>");
+                        td.find('u').on('click',function(){
+                            $vm.show_module(m.process_module,{UID:records[I].UID,A:records[I].A,goback:1,parent:records[I]})
+                        });
+                    }
+                    break;
+                case '_Received':
+                    td.html("<u style='cursor:pointer'>Action</u>");
+                    td.find('u').on('click',function(){
+                        $vm.show_module(m.receive_module,{self:m.self,UID:records[I].UID,A:records[I].A,goback:1,parent:records[I]})
+                    });
+                    break;
+            }
+        }
+        //-------------------------------------
+        m.data_process=function(){
+            var options={};
+            if(m.self==1) options={self:1};
+            var uid_array=[];
+            for(var i=0;i<m.records.length;i++){
+                uid_array.push(m.records[i].UID)
+            }
+            var query={ I2: { $in: uid_array } }
+            //--------------------------------------------------------
+            //load joined records parent.UID=child.I2
+            var cmd="find"; 
+            var req={cmd:cmd,table:m.approval_table,query:query,options:options}
+            $vm.request(req,function(res){
+                if(res.status=='np'){
+                    $("#grid__ID td[data-id=_Approved]").each(function(index){
+                        $(this).html('');
+                    })
+                }
+                if(res.result.length!=undefined){
+                    for(var k=0;k<res.result.length;k++){
+                        for(var j=0;j<m.records.length;j++){
+                            if(m.records[j].UID==res.result[k].I2){
+                                m.records[j].sys_temp_1=res.result[k];
+                                break;
+                            }
+                        }
+                    }
+                }
+                //rendering the column
+                $("#grid__ID td[data-id=_Approved]").each(function(index){
+                    if(m.records[index].sys_temp_1!=undefined){
+                        tt="";
+                        if(m.records[index].sys_temp_1.Data.Action=='approve') tt="<i rid="+index+" style='color:green;padding-left:10px;cursor:pointer' class='fas fa-check'></i>"
+                        if(m.records[index].sys_temp_1.Data.Action=='denay')   tt="<i rid="+index+" style='color:red;padding-left:10px;cursor:pointer' class='fas fa-times'></i>"
+                        $(this).html(tt);
+                        $(this).find('i').on('click',function(){
+                            var k=parseInt($(this).attr('rid'));
+                            //if(m.self==1) 
+                            $vm.show_module(m.approval_module,{readonly:1,record:m.records[k].sys_temp_1,parent:m.records[k]});
+                            //else $vm.show_module(m.approval_module,{readonly:readonly,record:m.records[k].sys_temp_1});
+                        })
+                    }
+                    if(m.records[index].sys_temp_1==undefined || m.records[index].sys_temp_1.Data.action=='denay' ){
+                        $(this).next('td').html('');
+                        $(this).next('td').next('td').html('');
+                    }
+                });
+            });
+            //--------------------------------------------------------
+            //load joined records parent.UID=child.I2
+            var cmd="find"; 
+            var req={cmd:cmd,table:m.process_table,query:query,options:options}
+            $vm.request(req,function(res){
+                if(res.status=='np'){
+                    $("#grid__ID td[data-id=_Processed]").each(function(index){
+                        $(this).html('');
+                    })
+                }
+                if(res.result.length!=undefined){
+                    for(var k=0;k<res.result.length;k++){
+                        for(var j=0;j<m.records.length;j++){
+                            if(m.records[j].UID==res.result[k].I2){
+                                m.records[j].sys_temp_2=res.result[k];
+                                break;
+                            }
+                        }
+                    }
+                }
+                //rendering the column
+                $("#grid__ID td[data-id=_Processed]").each(function(index){
+                    if(m.records[index].sys_temp_2!=undefined){
+                        var tt="<i rid="+index+" style='color:green;padding-left:10px;cursor:pointer' class='fas fa-check'></i>"
+                        $(this).html(tt);
+                        $(this).find('i').on('click',function(){
+                            var k=parseInt($(this).attr('rid'));
+                            //if(m.self==1) 
+                            $vm.show_module(m.process_module,{readonly:1,record:m.records[k].sys_temp_2,parent:m.records[k]});
+                            //else $vm.show_module(m.process_module,{readonly:readonly,record:m.records[k].sys_temp_2});
+                        })
+                    }
+                    else{
+                        $(this).next('td').html('');
+                    }
+                });
+            });
+            //--------------------------------------------------------
+            //load joined records parent.UID=child.I2
+            var cmd="find"; 
+            var req={cmd:cmd,table:m.receive_table,query:query,options:options}
+            $vm.request(req,function(res){
+                if(res.status=='np'){
+                    $("#grid__ID td[data-id=_Received]").each(function(index){
+                        $(this).html('');
+                    })
+                }
+                if(res.result.length!=undefined){
+                    for(var k=0;k<res.result.length;k++){
+                        for(var j=0;j<m.records.length;j++){
+                            if(m.records[j].UID==res.result[k].I2){
+                                m.records[j].sys_temp_3=res.result[k];
+                                break;
+                            }
+                        }
+                    }
+                }
+                //rendering the column
+                $("#grid__ID td[data-id=_Received]").each(function(index){
+                    if(m.records[index].sys_temp_3!=undefined){
+                        var tt="<i rid="+index+" style='color:green;padding-left:10px;cursor:pointer' class='fas fa-check'></i>"
+                        $(this).html(tt);
+                        $(this).find('i').on('click',function(){
+                            var k=parseInt($(this).attr('rid'));
+                            //if(m.self==1) 
+                            $vm.show_module(m.receive_module,{readonly:1,record:m.records[k].sys_temp_3,parent:m.records[k]});
+                            //else $vm.show_module(m.receive_module,{readonly:readonly,record:m.records[k].sys_temp_3});
+                        })
+                    }
+                });
+            });
+            //--------------------------------------------------------
+        }
+        //-------------------------------------
+    }
+</script>
+<style>
+    #nav__ID a{
+        text-decoration-line: underline;
+    }
+    VmInclude:__COMPONENT__/g/grid.01.css
+</style>

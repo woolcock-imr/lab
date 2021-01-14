@@ -13,6 +13,7 @@
     var prefix='';
     var $H=$vm.hosting_path+"/modules";
     var modules={
+        "management":{url:$vm.hosting_path+"/modules/panels/management.html",description:"panel"},
         "communal-ordering-data-self":{
             title:'My communal ordering records',
             url:$H+"/communal-ordering/record/data.html",
@@ -79,6 +80,31 @@
             url:$H+"/communal-ordering/diagram/diagram.html",
             description:"Communal ordering diagram",
             router:1,
+        },
+
+
+
+        "communal-ordering-company-data":{
+            title:'Company records',
+            url:$H+"/company/data.html",
+            Table:"communal-ordering-company",
+            form_module:"communal-ordering-company-form", 
+        },
+        "communal-ordering-company-form":{
+            title:'Company form',
+            url:$H+"/company/form.html",
+            Table:"communal-ordering-company",
+        },
+        "communal-ordering-supervisor-data":{
+            title:'supervisor records',
+            url:$H+"/supervisor/data.html",
+            Table:"communal-ordering-supervisor",
+            form_module:"communal-ordering-supervisor-form", 
+        },
+        "communal-ordering-supervisor-form":{
+            title:'Supervisor form',
+            url:$H+"/supervisor/form.html",
+            Table:"communal-ordering-supervisor",
         },
     }
     set_prefix(prefix,modules);
