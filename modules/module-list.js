@@ -18,6 +18,7 @@
             title:'My communal ordering records',
             url:$H+"/communal-ordering/record/data.html",
             Table:"communal-ordering",
+            
             form_module:"communal-ordering-form-self", 
             approval_module:prefix+'communal-ordering-approval-form',
             approval_table:"communal-ordering-approval",
@@ -32,8 +33,13 @@
             title:'Communal ordering form',
             url:$H+"/communal-ordering/record/form.html",
             Table:"communal-ordering",
+            
+            supplier_table:"communal-ordering-company",
+            supervisor_table:"communal-ordering-supervisor",
+            
             description:"Communal ordering form",
             self:1,
+            router:1
         },
         "communal-ordering-data":{
             title:'Communal ordering records',
@@ -94,6 +100,8 @@
             title:'Company form',
             url:$H+"/company/form.html",
             Table:"communal-ordering-company",
+
+
         },
         "communal-ordering-supervisor-data":{
             title:'supervisor records',

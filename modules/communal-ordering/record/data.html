@@ -6,8 +6,37 @@
         //-------------------------------------
         VmInclude:__COMPONENT__/g/grid.01.js
         //-------------------------------------
-        var fields="Requestor_Name, Date, Type,Chemical_requested,Quantity_requested,Preferred_supplier,Consumable_requested, Status";
-        m.fields="_Form,_Request_ID,"+fields+",Submit_date,Submitted_by,_Approved,_Processed,_Received,_Delete";
+        var fields="Requestor_Name,Supplier_Name,Quotation,Total_Amount,Status";
+        m.fields="_Form,_Request_ID,"+fields+",Submit_date,Submitted_by,_Lab_Manager_Approval,_Supervisor_Approval,Financial_Approval,_Received,_Delete";
+        //-------------------------------------
+        m.cell_render=function(records,I,field,td){
+            switch(field){
+                case '_Request_ID':
+                    td.html(records[I].UID);
+                    break;
+                case 'Total_Amount':
+                    td.html("$"+parseFloat(records[I].Data[field]).toFixed(2));
+                    td.css('text-align','right')
+                    break;
+                case 'Quotation':
+                    if(records[I].Data[field] !=undefined) m.set_file_link_s0(records,I,field,td);
+                    break;
+                case "_Delete":
+                    if(records[I].Data.Status=='Submit') td.html('');
+                    break;
+                case '_Lab_Manager_Approval':
+                    if(records[I].Data.Status=='Submit'){
+                        td.html("<u style='cursor:pointer'>Approving</u>");
+                        td.find('u').on('click',function(){
+                            $vm.show_module(m.lab_manager_approval_module,{UID:records[I].UID,A:records[I].A,goback:1,parent:records[I]})
+                        });
+                    }
+                    break;
+            }
+        }
+        //-------------------------------------
+        //var fields="Requestor_Name, Date, Type,Chemical_requested,Quantity_requested,Preferred_supplier,Consumable_requested, Status";
+        //m.fields="_Form,_Request_ID,"+fields+",Submit_date,Submitted_by,_Approved,_Processed,_Received,_Delete";
         //-------------------------------------
         m.load=function(){
             if(m.self==1) m.options={self:1};
@@ -20,7 +49,7 @@
             return true;
         }
         //-------------------------------------
-        m.cell_render=function(records,I,field,td){
+        m._cell_render=function(records,I,field,td){
             switch(field){
                 case '_Request_ID':
                     td.html(records[I].UID);
@@ -53,7 +82,7 @@
             }
         }
         //-------------------------------------
-        m.data_process=function(){
+        m._data_process=function(){
             var options={};
             if(m.self==1) options={self:1};
             var uid_array=[];

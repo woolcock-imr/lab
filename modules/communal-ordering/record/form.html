@@ -1,25 +1,76 @@
 ﻿<div id=D__ID>
-    <section id=form_container__ID>
+    <section id=form_container__ID bp=576 style='display:flow-root;'>
     	<div id=header__ID>
     		Communal ordering form
     	</div>
     	<form id=F__ID>
-			<div>
-				<div w='100|100'>
-					<span>1. Full name of the requestor</span>
-					<input type="text" name=Requestor_Name required />
+			<div id=F_1__ID>
+				<div>
+					<div w='100|50'>
+						<span>Full name of the requestor</span>
+						<input type="text" name=Requestor_Name required />
+					</div>
+					<div w='100|50'>
+						<span>Email of the requestor</span>
+						<input type="email" name=Requestor_Email required />
+					</div>
+				</div>
+				<div>
+					<div w='100|50'>
+						<span>Supplier Name</span>
+						<select name=Supplier_Name id=supplier__ID></select>
+					</div>
+					<div w='100|50'>
+						<span>Supplier Email</span>
+						<input type=email name=Supplier_Email />
+					</div>
+					<div w='100|50'>
+						<span>Supplier Phone</span>
+						<input type=text name=Supplier_Phone />
+					</div>
+					<div w='100|50'>
+						<span>Supplier Account_Number</span>
+						<input type=text name=Supplier_Account_Number />
+					</div>
+				</div>
+				<div>
+					<div w='100|50'>
+						<span>Supervisor Name</span>
+						<select name=Supervisor_Name id=supervisor__ID></select>
+					</div>
+					<div w='100|50'>
+						<span>Supervisor Email</span>
+						<input type=email name=Supervisor_Email />
+					</div>
+					<div w='100|50'>
+						<span>Group</span>
+						<input type=text name=Supervisor_Group />
+					</div>
+					<div w='100|50'>
+						<span>Project Code</span>
+						<input type=text name=Project_Code />
+					</div>
+				</div>
+				<div>
+					<div w='100|100'>
+						<span>Quotation</span>
+						<div class="form-control" style='height: 80px;'>
+                            <u style='cursor:pointer' id=link_Quotation__ID></u>
+                            <br>
+                            <input type="file" name=Quotation style="margin-top:6px" /> <button type="button" id=x_Quotation__ID style='margin-left:30px'>Remove</button>
+                        </div>
+    				</div>
 				</div>
 			</div>
+			<hr style="border-top: 1px solid #888;width: 100%;margin:10px 0">
 			<div>
 				<div w='100|100'>
-					<span>2. Email the requestor</span>
-					<input type="email" name=Requestor_Email required />
-				</div>
-			</div>
-			<div>
-				<div w='100|100'>
-					<span>3. Date Requested</span>
-					<input type=date name=Date ></input>
+					<u style='cursor:pointer;margin-bottom:3px;display:inline-block' id=item_a_add__ID><i class="fa fa-plus"></i> Add an item</u>
+					<table id=grid_item_a__ID></table>
+					<div id=total__ID style='text-align: right;padding-top:6px'>
+							GST Amount: <input type=text name=GST_Amount style="width:120px;margin-bottom:1px" readonly><br>
+							Total Amount: <input type=text name=Total_Amount style="width:120px" readonly>
+					</div>
 				</div>
 			</div>
 			<section style='display:none'>
@@ -30,41 +81,158 @@
 					<button id=draft__ID type="button" class="btn btn-secondary">Save and Return Later</button>
 					<button id=submit__ID type="button" class="btn btn-secondary">Submit</button>
 					<button id=trigger__ID style='display:none'></button>
-				</div>
+    				<button id=pdf1__ID type="button" class="btn btn-secondary">PDF</button>
+					</div>
 			</div>
     	</form>
-    </section>
+	</section>
+	<!--<div id=image__ID></div>-->
+	VmInclude:__COMPONENT__/m/model.01.html
     <script>
     	function F__ID(){
     		//-------------------------------------
 			VmInclude:__COMPONENT__/f/form.01.js
+            VmInclude:__COMPONENT__/f/form-item-a.01.js
 			new ResizeObserver($vm.responsive).observe(form_container__ID);
-			m.storage_type=='s0'
+			m.storage_type='s0'
 			//-------------------------------------
+			var auto_lists=function(){
+				var supplier=[];
+				var supervisor=[];
+				jQuery.ajaxSetup({async:false});
+				var list_m_req={cmd:"find",table:m.supplier_table,skip:0,limit:100}
+				$vm.request(list_m_req,function(res){
+					supplier=res.result;
+					if(res.result.length>0){
+						var list=';';
+						for(var i=0;i<res.result.length;i++){
+							if(list!='') list+=','
+							list+=res.result[i].Data.Name;
+						}
+						$vm.set_dropdown_list_from_text($('#supplier__ID'),list);
+					}
+				})
+				var list_m_req={cmd:"find",table:m.supervisor_table,skip:0,limit:100}
+				$vm.request(list_m_req,function(res){
+					supervisor=res.result;
+					if(res.result.length>0){
+						var list=';';
+						for(var i=0;i<res.result.length;i++){
+							if(list!='') list+=','
+							list+=res.result[i].Data.Name;
+						}
+						$vm.set_dropdown_list_from_text($('#supervisor__ID'),list);
+					}
+				})
+				jQuery.ajaxSetup({async:true});
+				//-------------------------------------
+				$('#supplier__ID').on('change',function(){
+					var name=this.value;
+					for(var i=0;i<supplier.length;i++){
+						if(supplier[i].Data.Name==name){
+							$('#F__ID input[name=Supplier_Email]').val(supplier[i].Data.Email);
+							$('#F__ID input[name=Supplier_Phone]').val(supplier[i].Data.Phone);
+							$('#F__ID input[name=Supplier_Account_Number]').val(supplier[i].Data.Account_Number);
+							break;
+						}
+					}
+				})
+				$('#supervisor__ID').on('change',function(){
+					var name=this.value;
+					for(var i=0;i<supervisor.length;i++){
+						if(supervisor[i].Data.Name==name){
+							$('#F__ID input[name=Supervisor_Email]').val(supervisor[i].Data.Email);
+							$('#F__ID input[name=Supervisor_Group]').val(supervisor[i].Data.Group);
+							break;
+						}
+					}
+				})
+			}
+			//-------------------------------------
+			var item_a_list=function(){
+				//----------------------------------
+				//item a part
+				m.item_a_fields="Description,Unit_Price,Quantity,GST,Amount,_Remove";
+				//----------------------------------
+				$('#item_a_add__ID').on('click',function(){ m.item_a_add(); })
+				//----------------------------------
+				m.item_a_cell_render=function(records,I,field,td,set_value,source){
+					switch(field){
+						case "Amount":
+							td.find('div:first').removeAttr('contenteditable');
+							break;
+						case "GST":
+							var html='<input type=checkbox />';
+							$vm.render_checkbox_field(records[I],'__ID',td,html)
+							td.find('input').on('change',function(){
+								cal();
+							})
+							break;
+					}
+				}
+				//----------------------------------
+				m.item_a_after_change=function(records,I,field,td,set_value,source){
+					switch(field){
+						case "Unit_Price":
+						case "Quantity":
+						case "GST":
+							cal();
+							break;
+					}
+				}
+				//----------------------------------
+				m.item_a_after_remove=function(){
+					cal();
+				}
+				//----------------------------------
+				var cal=function(){
+					var total=0,gst=0;
+					for(var i=0;i<m.item_a_records.length;i++){
+						var p=parseFloat(m.item_a_records[i].Unit_Price);
+						var q=parseFloat(m.item_a_records[i].Quantity);
+						if(m.item_a_records[i].Unit_Price=='') p=0;
+						if(m.item_a_records[i].Quantity=='') q=0;
+						var a=p*q;
+						if(m.item_a_records[i].GST=='1'){
+							gst+=a*0.1;
+							a=a*1.1;
+						}
+						m.item_a_records[i].Amount=a.toFixed(2);
+						total+=a;
+					}
+					$('#F__ID input[name=GST_Amount]').val(gst.toFixed(2));
+					$('#F__ID input[name=Total_Amount]').val(total.toFixed(2));
+					m.item_a_render();
+				}
+				//----------------------------------
+			}
+			auto_lists();
+			item_a_list();
+
 			var old_m_load=m.load;
 			m.load=function(){
-				if($vm.user_name=="guest"){
-					alert("You haven't login.");
-					return;
-				}
 				old_m_load();
 				if(m.input.record!=undefined && m.input.record.Data.Status=="Submit"){
 					$('#draft__ID').hide();
 					$('#submit__ID').hide();
 				}
+                m.set_file_link_s0("Quotation");
+				//-------item a part
+                m.item_a_records=[]; if(m.input.record!=undefined && m.input.record.Data.items!=undefined) m.item_a_records=m.input.record.Data.items;
+                m.item_a_render();
+                //-------
 			}      
 			$('#draft__ID').on('click',function(){	$("#F__ID input[name='Status']").val('Draft');  m.options.lock=0; $('#trigger__ID').trigger( "click" ); })
 			$('#submit__ID').on('click',function(){	$("#F__ID input[name='Status']").val('Submit'); m.options.lock=1; $('#trigger__ID').trigger( "click" ); })
 			//-------------------------------------
             m.before_submit=function(data,index){
-				if(m.input.record==undefined){ 		//only for add
-					index.A=$vm.user_name; 
-				}
+				if(m.input.record==undefined){ 	index.A=$vm.user_name; 	} //only for add
+                data.items=m.item_a_get_data();
                 return true;
             }
 			//-------------------------------------
-			m.after_insert=function(data,res){ after_submit(data,res); }
-			m.after_update=function(data,res){ after_submit(data,res); }
+			//m.after_insert=function(data,res){ after_submit(data,res); }
+			//m.after_update=function(data,res){ after_submit(data,res); }
 			var after_submit=function(data,res){
 				if(data.Status=='Submit'){
 					var req={cmd:'flow',flowid:'flow_lab_order_submitted',data:data}
@@ -83,21 +251,59 @@
 				}
 			}
 			//-------------------------------------
+			$('#pdf1__ID').on('click',function(){
+				$('#draft__ID').hide();
+				$('#submit__ID').hide();
+				$('#pdf1__ID').hide();
+				$('#x_Quotation__ID').hide();
+				$('#item_a_add__ID').hide();
+				
+				html2canvas(document.querySelector("#form_container__ID")).then(function(canvas){
+					var canvasImg = canvas.toDataURL("image/jpg");
+					//$('#image__ID').html('<img src="'+canvasImg+'" alt="">');
+					let pdf = new jsPDF('p', 'mm', 'a4');
+					pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 10, 10, 211-20, 298-20);
+					pdf.save("order.pdf");
+					/*
+					var ddd = pdf.output('arraybuffer');
+					var s=$vm.getB64Str(ddd);
+					var url='https://prod-11.australiasoutheast.logic.azure.com:443/workflows/cf0ce745360d4c6fba338905846477d0/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=pTQlTPRwkheQOAax8FZ96qp6z40j6Ec6LCUL599rFTE';
+					var data={'attachment':s};
+					$vm.msflow(url,s);
+					*/
+					$('#draft__ID').show();
+					$('#submit__ID').show();
+					$('#pdf1__ID').show();
+					$('#x_Quotation__ID').show();
+					$('#item_a_add__ID').show();
+				})
+			})
+			//-------------------------------------
+            $vm.msflow=function (url,data){
+                var url='https://prod-11.australiasoutheast.logic.azure.com:443/workflows/cf0ce745360d4c6fba338905846477d0/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=pTQlTPRwkheQOAax8FZ96qp6z40j6Ec6LCUL599rFTE';
+                var xmlHttp = new XMLHttpRequest();
+                xmlHttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                    }
+                    else if (this.readyState == 4 && this.status == 403) {
+                    }
+                    if (this.status == 404) {
+                        $vm.alert(url + ", 404 (Not found)");
+                    }
+                }
+                xmlHttp.open("POST", url, true); // true for asynchronous
+                xmlHttp.setRequestHeader("Content-Type", "application/json");
+                xmlHttp.send(JSON.stringify(data));
+            }
+			//---------------------------------------
 		}
-    </script>
+	</script>
     <style>
         #form_container__ID{
-            max-width:800px;
+            max-width:1000px;
         }
 		VmInclude:__CURRENT_PATH__form.css
-        VmInclude:__COMPONENT__/f/form.01.css
-		#D__ID{
-			background-size: cover; 
-			background-repeat: repeat-x; 
-			background-position: center top; 
-			background-attachment: fixed;
-			background-image: url("__CURRENT_PATH__form.jpg");
-			background-color: unset;
-		}
+        VmInclude:__COMPONENT__/f/form-item-a.01.css
+		VmInclude:__COMPONENT__/f/form.01.css
     </style>
 </div>

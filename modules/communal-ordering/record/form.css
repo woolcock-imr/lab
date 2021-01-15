@@ -1,14 +1,14 @@
-﻿#F__ID > div,#F__ID section > div{
-  padding:15px 5px;
+﻿#F_1__ID > div,#F_1__ID section > div{
+  padding:0px 5px 10px 5px;
 }
-#F__ID > div:hover,#F__ID section > div:hover{
+#F_1__ID > div:hover,#F_1__ID section > div:hover{
   background-color: #ddd;
 }
-#F__ID > div div, #F__ID > section div div{
+#F_1__ID > div div, #F_1__ID > section div div{
   padding-left: 15px;
   padding-right: 15px;
 }
-#F__ID input[type=text],#F__ID input[type=date],#F__ID input[type=email],#F__ID select,#F__ID textarea{
+#F_1__ID input[type=text],#F_1__ID input[type=date],#F_1__ID input[type=email],#F_1__ID select,#F__ID textarea{
   display: block;
   width: 100%;
   height: calc(1.5em + 0.75rem + 2px);
@@ -23,13 +23,19 @@
   border-radius: 0.25rem;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
-#F__ID input[type=text]:focus,#F__ID input[type=date]:focus,#F__ID input[type=email]:focus,#F__ID select:focus,#F__ID textarea:focus{
+#F_1__ID input[type=text]:focus,#F_1__ID input[type=date]:focus,#F_1__ID input[type=email]:focus,#F_1__ID select:focus,#F_1__ID textarea:focus{
   color: #495057;
 background-color: #fff;
 border-color: #80bdff;
 outline: 0;
 box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
+#F__ID span{
+  margin-top:18px;
+  display:inline-block;
+  font-weight: bold;
+}
+
 .file__ID{
   display: block;
   width: 100%;
