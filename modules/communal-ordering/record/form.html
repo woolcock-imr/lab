@@ -57,7 +57,7 @@
 						<div class="form-control" style='height: 80px;'>
                             <u style='cursor:pointer' id=link_Quotation__ID></u>
                             <br>
-                            <input type="file" name=Quotation style="margin-top:6px" /> <button type="button" id=x_Quotation__ID style='margin-left:30px'>Remove</button>
+                            <input type="file" name=Quotation style="margin-top:6px" /> <button class=c_print type="button" id=x_Quotation__ID style='margin-left:30px'>Remove</button>
                         </div>
     				</div>
 				</div>
@@ -65,7 +65,7 @@
 			<hr style="border-top: 1px solid #888;width: 100%;margin:10px 0">
 			<div>
 				<div w='100|100'>
-					<u style='cursor:pointer;margin-bottom:3px;display:inline-block' id=item_a_add__ID><i class="fa fa-plus"></i> Add an item</u>
+					<u class=c_print style='cursor:pointer;margin-bottom:3px;display:inline-block' id=item_a_add__ID><i class="fa fa-plus"></i> Add an item</u>
 					<table id=grid_item_a__ID></table>
 					<div id=total__ID style='text-align: right;padding-top:6px'>
 							GST Amount: <input type=text name=GST_Amount style="width:120px;margin-bottom:1px" readonly><br>
@@ -77,16 +77,16 @@
 				<input type="text" name=Status  />
 			</section>
 			<div>
-				<div w='100|100'>
+				<div w='100|100' class=c_print>
 					<button id=draft__ID type="button" class="btn btn-secondary">Save and Return Later</button>
 					<button id=submit__ID type="button" class="btn btn-secondary">Submit</button>
-					<button id=trigger__ID style='display:none'></button>
     				<button id=pdf1__ID type="button" class="btn btn-secondary">PDF</button>
-					</div>
+					<div style='display:none'><button id=trigger__ID></button></div>
+				</div>
 			</div>
     	</form>
 	</section>
-	<!--<div id=image__ID></div>-->
+	<div id=image__ID></div>
 	VmInclude:__COMPONENT__/m/model.01.html
     <script>
     	function F__ID(){
@@ -95,6 +95,7 @@
             VmInclude:__COMPONENT__/f/form-item-a.01.js
 			new ResizeObserver($vm.responsive).observe(form_container__ID);
 			m.storage_type='s0'
+			//$('#F__ID button').addClass('c_print');
 			//-------------------------------------
 			var auto_lists=function(){
 				var supplier=[];
@@ -206,11 +207,12 @@
 				}
 				//----------------------------------
 			}
-			auto_lists();
 			item_a_list();
-
 			var old_m_load=m.load;
 			m.load=function(){
+				if( $('#supplier__ID').html()=='' || $('#supervisor__ID').html()=='' ){
+					auto_lists();
+				}
 				old_m_load();
 				if(m.input.record!=undefined && m.input.record.Data.Status=="Submit"){
 					$('#draft__ID').hide();
@@ -252,18 +254,33 @@
 			}
 			//-------------------------------------
 			$('#pdf1__ID').on('click',function(){
-				$('#draft__ID').hide();
-				$('#submit__ID').hide();
-				$('#pdf1__ID').hide();
-				$('#x_Quotation__ID').hide();
-				$('#item_a_add__ID').hide();
-				
+				$('#F__ID .c_print').hide();
+				var CH=document.getElementById('form_container__ID').clientHeight;
+				var CW=document.getElementById('form_container__ID').clientWidth;
 				html2canvas(document.querySelector("#form_container__ID")).then(function(canvas){
 					var canvasImg = canvas.toDataURL("image/jpg");
-					//$('#image__ID').html('<img src="'+canvasImg+'" alt="">');
-					let pdf = new jsPDF('p', 'mm', 'a4');
-					pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 10, 10, 211-20, 298-20);
+					var pdf = new jsPDF('p', 'mm', 'a4');
+					var mH=10,mW=8;
+					var W=210;
+					var H=297;
+					var pW=CW;
+					var pH=pW*(H-2*mH)/(W-2*mW);
+					var pages=CH/pH;
+					for(var i=0;i<pages;i++){
+						var ccc=document.createElement("canvas");
+						ccc.setAttribute('width', pW);
+						ccc.setAttribute('height', pH);
+						var ctx = ccc.getContext('2d');
+						ctx.fillStyle="#FFFFFF";
+                        ctx.fillRect(0,0,pW,pH);						
+						ctx.drawImage(canvas,0,i*pH,pW,pH,0,0,pW,pH);
+						var canvasDataURL = ccc.toDataURL("image/png", 1.0);
+						if(i>0) pdf.addPage();
+						pdf.addImage(canvasDataURL, 'PNG', mW, mH, W-2*mW, H-2*mH);
+					}
 					pdf.save("order.pdf");
+					$('#F__ID .c_print').show();
+
 					/*
 					var ddd = pdf.output('arraybuffer');
 					var s=$vm.getB64Str(ddd);
@@ -271,31 +288,75 @@
 					var data={'attachment':s};
 					$vm.msflow(url,s);
 					*/
-					$('#draft__ID').show();
-					$('#submit__ID').show();
-					$('#pdf1__ID').show();
-					$('#x_Quotation__ID').show();
-					$('#item_a_add__ID').show();
 				})
 			})
 			//-------------------------------------
-            $vm.msflow=function (url,data){
-                var url='https://prod-11.australiasoutheast.logic.azure.com:443/workflows/cf0ce745360d4c6fba338905846477d0/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=pTQlTPRwkheQOAax8FZ96qp6z40j6Ec6LCUL599rFTE';
-                var xmlHttp = new XMLHttpRequest();
-                xmlHttp.onreadystatechange = function () {
-                    if (this.readyState == 4 && this.status == 200) {
-                    }
-                    else if (this.readyState == 4 && this.status == 403) {
-                    }
-                    if (this.status == 404) {
-                        $vm.alert(url + ", 404 (Not found)");
-                    }
-                }
-                xmlHttp.open("POST", url, true); // true for asynchronous
-                xmlHttp.setRequestHeader("Content-Type", "application/json");
-                xmlHttp.send(JSON.stringify(data));
-            }
-			//---------------------------------------
+
+
+
+
+
+$vm.add_value_to_select=function($el, v){
+	var exists = false;
+	$el.find('option').each(function(index){
+		if (this.value == v) {
+			exists = true;
+			return false;
+		}
+	});    
+	if(exists==false){
+		$el.append(new Option(v, v));
+	}
+}
+$vm.deserialize=function(record,form_id){
+	if(record==undefined || record.Data==undefined) return;
+	$.each(record.Data, function(name, value){
+		if(name!=''){
+			var $els = $(form_id+' *[name='+name+']');
+			$els.each(function(){
+				var $el=$(this);
+				var type = $el.attr('type');
+				switch(type){
+					case 'checkbox':
+						if(value=='off' || value=='0' || value=='' || value==undefined ) $el.prop('checked', false);
+						else $el.prop('checked', true);
+						break;
+					case 'radio':
+						if($el.attr('value')==value){
+							$el.prop('checked', true);
+						}
+						break;
+					case 'file':
+						break;
+					case 'text':
+					case 'email':
+					case 'textarea':
+					case 'select':
+						$el.val(value);
+						break;
+					case 'undefined':
+						break;
+					default:
+						var type1=$(this).prop('nodeName');
+						switch(type1){
+							case "SELECT":
+								$vm.add_value_to_select($el,value);
+								$el.val(value);
+								break;
+							default: 
+								console.log(type+"---"+type1)				
+								$el.val(value); break;
+						}
+						break;
+				}
+			});
+		}
+	});
+}
+
+
+
+
 		}
 	</script>
     <style>
