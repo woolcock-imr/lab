@@ -112,7 +112,7 @@
                 //rendering the column
                 $("#grid__ID td[data-id=_Lab_Manager_Approval]").each(function(index){
                     if(m.records[index].sys_child_lab!=undefined){
-                        tt="";
+                        var tt="";
                         if(m.records[index].sys_child_lab.Data.Action=='approve') tt="<i rid="+index+" style='color:green;padding-left:10px;cursor:pointer' class='fas fa-check'></i>"
                         if(m.records[index].sys_child_lab.Data.Action=='denay')   tt="<i rid="+index+" style='color:red;padding-left:10px;cursor:pointer' class='fas fa-times'></i>"
                         $(this).html(tt);
@@ -156,7 +156,7 @@
                 //rendering the column
                 $("#grid__ID td[data-id=_Supervisor_Approval]").each(function(index){
                     if(m.records[index].sys_child_supervisor!=undefined){
-                        tt="";
+                        var tt="";
                         if(m.records[index].sys_child_supervisor.Data.Action=='approve') tt="<i rid="+index+" style='color:green;padding-left:10px;cursor:pointer' class='fas fa-check'></i>"
                         if(m.records[index].sys_child_supervisor.Data.Action=='denay')   tt="<i rid="+index+" style='color:red;padding-left:10px;cursor:pointer' class='fas fa-times'></i>"
                         $(this).html(tt);
@@ -199,7 +199,7 @@
                 //rendering the column
                 $("#grid__ID td[data-id=_Financial_Approval]").each(function(index){
                     if(m.records[index].sys_child_financial!=undefined){
-                        tt="";
+                        var tt="";
                         if(m.records[index].sys_child_financial.Data.Action=='approve') tt="<i rid="+index+" style='color:green;padding-left:10px;cursor:pointer' class='fas fa-check'></i>"
                         if(m.records[index].sys_child_financial.Data.Action=='denay')   tt="<i rid="+index+" style='color:red;padding-left:10px;cursor:pointer' class='fas fa-times'></i>"
                         $(this).html(tt);
@@ -243,9 +243,10 @@
                 //rendering the column
                 $("#grid__ID td[data-id=_Received]").each(function(index){
                     if(m.records[index].sys_child_received!=undefined){
-                        tt="";
-                        if(m.records[index].sys_child_received.Data.Action=='approve') tt="<i rid="+index+" style='color:green;padding-left:10px;cursor:pointer' class='fas fa-check'></i>"
-                        if(m.records[index].sys_child_received.Data.Action=='denay')   tt="<i rid="+index+" style='color:red;padding-left:10px;cursor:pointer' class='fas fa-times'></i>"
+                        var tt="";
+                        tt="<i rid="+index+" style='color:green;padding-left:10px;cursor:pointer' class='fas fa-check'></i>"
+                        //if(m.records[index].sys_child_received.Data.Action=='approve') tt="<i rid="+index+" style='color:green;padding-left:10px;cursor:pointer' class='fas fa-check'></i>"
+                        //if(m.records[index].sys_child_received.Data.Action=='denay')   tt="<i rid="+index+" style='color:red;padding-left:10px;cursor:pointer' class='fas fa-times'></i>"
                         $(this).html(tt);
                         $(this).find('i').on('click',function(){
                             var k=parseInt($(this).attr('rid'));

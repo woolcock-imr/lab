@@ -233,23 +233,28 @@
                 return true;
             }
 			//-------------------------------------
-			//m.after_insert=function(data,res){ after_submit(data,res); }
-			//m.after_update=function(data,res){ after_submit(data,res); }
+			m.after_insert=function(data,res){ after_submit(data,res); }
+			m.after_update=function(data,res){ after_submit(data,res); }
 			var after_submit=function(data,res){
+				var ret=0; if(m.input.goback!=undefined) ret=1;
+				if(m.input.record!=undefined && m.input.record._id!=undefined) ret=1;
 				if(data.Status=='Submit'){
-					var req={cmd:'flow',flowid:'flow_lab_order_submitted',data:data}
-					$vm.request(req,function(res){
-						$vm.refresh=1;
-						m.change_status++;
-						if(m.input.goback!=undefined) window.history.go(-1);            //from grid
-						else $vm.alert('Your data has been successfully submitted');    //standalone
+				//if(data.Status=='Draft'){
+					var url="https://58e70888d63eb45a92bc2dd0d161d492.m.pipedream.net/order/"+$vm.user_name;
+					$vm.vmpost(url,data,function(code){
+						if(code==200){
+							$vm.refresh=1;
+							m.change_status++;
+							if(ret==1) window.history.go(-1);            					//from grid
+							else $vm.alert('Your data has been successfully submitted');    //standalone
+						}
 					});
 				}
 				else{
 					$vm.refresh=1;
 					m.change_status++;
-					if(m.input.goback!=undefined) window.history.go(-1);            //from grid
-					else $vm.alert('Your data has been successfully saved');    //standalone
+					if(ret==1) window.history.go(-1);            					//from grid
+					else $vm.alert('Your data has been successfully saved');    	//standalone
 				}
 			}
 			//-------------------------------------

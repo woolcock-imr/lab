@@ -48,7 +48,7 @@
                 return true;
             }
     		//-------------------------------------
-			m.after_insert=function(data,res){
+			m._after_insert=function(data,res){
 				var d={
 					"Received_by":$vm.user_name,"Date":new Date().toLocaleString(),"Request_ID":m.input.UID,Notes:data.Notes,
 					Requestor_Email:m.input.parent.Data.Requestor_Email,
