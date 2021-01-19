@@ -59,18 +59,20 @@
                 return true;
             }
     		//-------------------------------------
-			m._after_insert=function(data,res){
-				var d={
+			m.after_insert=function(data,res){
+				var data={
 					"Action":data.Action, "Action_performed_by":$vm.user_name,"Date":new Date().toLocaleString(),"Request_ID":m.input.UID,Reason:data.Reason,
 					Requestor_Email:m.input.parent.Data.Requestor_Email,
 					Requestor_Name:m.input.parent.Data.Requestor_Name
 				}
-				var req={cmd:'flow',flowid:'flow_lab_order_approved',data:d}
-				$vm.request(req,function(res){
-					$vm.refresh=1;
-					m.change_status++;
-					if(m.input.goback!=undefined) window.history.go(-1);            //from grid
-					else $vm.alert('Your data has been successfully submitted');    //standalone
+				var url="https://58e70888d63eb45a92bc2dd0d161d492.m.pipedream.net/supervisor/"+$vm.user_name;
+				$vm.vmpost(url,data,function(code){
+					if(code==200){
+						$vm.refresh=1;
+						m.change_status++;
+						if(m.input.goback!=undefined) window.history.go(-1);            //from grid
+						else $vm.alert('Your data has been successfully submitted');    //standalone
+					}
 				});
 			}
 			//-------------------------------------

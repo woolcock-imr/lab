@@ -13,7 +13,7 @@
     var prefix='';
     var $H=$vm.hosting_path+"/modules";
     var modules={
-        "management":{url:$vm.hosting_path+"/modules/panels/management.html",description:"panel"},
+        "management":{url:$vm.hosting_path+"/modules/panels/management.html",description:"panel",router:1},
         "communal-ordering-data-self":{
             title:'My communal ordering records',
             url:$H+"/communal-ordering/record/data.html",
@@ -86,12 +86,19 @@
             parent_table:"communal-ordering",
             description:"Communal ordering financial approval",
         },
+        "communal-ordering-receive-form":{
+            title:"Communal ordering received form",
+            url:$H+"/communal-ordering/receive/form.html",
+            Table:"communal-ordering-receive",
+            parent_table:"communal-ordering",
+            description:"Communal ordering received",
+        },
 
         
 
 
 
-
+        /*
         "communal-ordering-approval-form":{
             title:"Communal ordering approval",
             url:$H+"/communal-ordering/approval/form.html",
@@ -106,20 +113,13 @@
             parent_table:"communal-ordering",
             description:"Communal ordering process",
         },
-        "communal-ordering-receive-form":{
-            title:"Communal ordering received form",
-            url:$H+"/communal-ordering/receive/form.html",
-            Table:"communal-ordering-receive",
-            parent_table:"communal-ordering",
-            description:"Communal ordering received",
-        },
         "communal-ordering-diagram":{
             title:"Communal ordering diagram",
             url:$H+"/communal-ordering/diagram/diagram.html",
             description:"Communal ordering diagram",
             router:1,
         },
-
+        */
 
 
         "communal-ordering-company-data":{
@@ -132,8 +132,6 @@
             title:'Company form',
             url:$H+"/company/form.html",
             Table:"communal-ordering-company",
-
-
         },
         "communal-ordering-supervisor-data":{
             title:'supervisor records',
