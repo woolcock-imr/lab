@@ -225,6 +225,7 @@
                 m.item_a_render();
                 //-------
 			}      
+			//-------------------------------------
 			$('#draft__ID').on('click',function(){	$("#F__ID input[name='Status']").val('Draft');  m.options.lock=0; $('#trigger__ID').trigger( "click" ); })
 			$('#submit__ID').on('click',function(){	$("#F__ID input[name='Status']").val('Submit'); m.options.lock=1; $('#trigger__ID').trigger( "click" ); })
 			//-------------------------------------
@@ -239,17 +240,51 @@
 			var after_submit=function(data,res){
 				var ret=0; if(m.input.goback!=undefined) ret=1;
 				if(m.input.record!=undefined && m.input.record._id!=undefined) ret=1;
-				if(data.Status=='Submit'){
-				//if(data.Status=='Draft'){
-					var url="https://58e70888d63eb45a92bc2dd0d161d492.m.pipedream.net/order/"+$vm.user_name;
-					$vm.vmpost(url,data,function(code){
+				//if(data.Status=='Submit'){
+				if(data.Status=='Draft'){
+					//-----------------------------------------
+					//debug send email
+					var url=$vm.api_address+"/email/submit/"+$vm.user_name;
+					var ddd=data;
+					open_model__ID();
+					$('#msg__ID').text('Sending email ... please wait!');
+					$vm.vmpost(url,ddd,function(code){
 						if(code==200){
+							close_model__ID();
 							$vm.refresh=1;
 							m.change_status++;
 							if(ret==1) window.history.go(-1);            					//from grid
 							else $vm.alert('Your data has been successfully submitted');    //standalone
 						}
 					});
+					/*
+					//-----------------------------------------
+					//debug send pdf email
+					var mm=$vm.module_list["communal-ordering-pdf-form"];
+					var id=mm.id;
+                	$('#D'+id).show();
+                	setTimeout(function(){
+						open_model__ID();
+						$('#msg__ID').text('Sending email with pdf attachment... please wait!');
+						mm.get_pdf_data(m.input.record,function(d){
+							//d.pdf.save("order.pdf");
+							$('#D'+id).hide();
+							var url=$vm.api_address+"/email/submit/"+$vm.user_name;
+							var ddd={data:data,pdf:d.b64str};
+							$vm.vmpost(url,ddd,function(code){
+								if(code==200){
+									close_model__ID();
+									console.log("send email ok");
+									$vm.refresh=1;
+									m.change_status++;
+									if(ret==1) window.history.go(-1);            					//from grid
+									else $vm.alert('Your data has been successfully submitted');    //standalone
+								}
+							});
+						})
+                	},1);
+					//-----------------------------------------
+					*/
 				}
 				else{
 					$vm.refresh=1;
@@ -259,7 +294,73 @@
 				}
 			}
 			//-------------------------------------
+			m.get_pdf_data=function(data,callback){
+				$('#F__ID')[0].reset();
+				//var mm=$vm.module_list[name];
+				$vm.deserialize(data,'#F__ID');
+				//-------item a part
+                m.item_a_records=[]; if(data!=undefined && data.Data.items!=undefined) m.item_a_records=data.Data.items;
+                m.item_a_render();
+                //-------
+				$('#F__ID .c_print').hide();
+				var CH=document.getElementById('form_container__ID').clientHeight;
+				var CW=document.getElementById('form_container__ID').clientWidth;
+				html2canvas(document.querySelector("#form_container__ID")).then(function(canvas){
+					var canvasImg = canvas.toDataURL("image/jpg");
+					var pdf = new jsPDF('p', 'mm', 'a4');
+					var mH=10,mW=8;
+					var W=210;
+					var H=297;
+					var pW=CW;
+					var pH=pW*(H-2*mH)/(W-2*mW);
+					var pages=CH/pH;
+					for(var i=0;i<pages;i++){
+						var ccc=document.createElement("canvas");
+						ccc.setAttribute('width', pW);
+						ccc.setAttribute('height', pH);
+						var ctx = ccc.getContext('2d');
+						ctx.fillStyle="#FFFFFF";
+                        ctx.fillRect(0,0,pW,pH);						
+						ctx.drawImage(canvas,0,i*pH,pW,pH,0,0,pW,pH);
+						var canvasDataURL = ccc.toDataURL("image/png", 1.0);
+						if(i>0) pdf.addPage();
+						pdf.addImage(canvasDataURL, 'PNG', mW, mH, W-2*mW, H-2*mH);
+					}
+					$('#F__ID .c_print').show();
+					var ddd = pdf.output('arraybuffer');
+					var s=$vm.getB64Str(ddd);
+					callback({
+						pdf:pdf,
+						b64str:s
+					});
+				})
+			}
+			//-------------------------------------
 			$('#pdf1__ID').on('click',function(){
+				var mm=$vm.module_list["communal-ordering-pdf-form"];
+				var id=mm.id;
+                $('#D'+id).show();
+                setTimeout(function(){
+					mm.get_pdf_data(m.input.record,function(d){
+						d.pdf.save("order.pdf");
+						$('#D'+id).hide();
+					})
+                },100);
+				/*
+				$vm.install_module('communal-ordering-pdf-form','content',{record:m.input.record}, function(name,id){
+					$('#D'+id).show();
+					setTimeout(function(){
+						var mm=$vm.module_list[name];
+						mm.get_pdf_data(function(d){
+							d.pdf.save("order.pdf");
+							$('#D'+id).show();
+						})
+					},100)
+				});
+				*/
+			})
+			//-------------------------------------
+				/*
 				$('#F__ID .c_print').hide();
 				var CH=document.getElementById('form_container__ID').clientHeight;
 				var CW=document.getElementById('form_container__ID').clientWidth;
@@ -287,78 +388,19 @@
 					pdf.save("order.pdf");
 					$('#F__ID .c_print').show();
 
-					/*
+					
 					var ddd = pdf.output('arraybuffer');
 					var s=$vm.getB64Str(ddd);
 					var url='https://prod-11.australiasoutheast.logic.azure.com:443/workflows/cf0ce745360d4c6fba338905846477d0/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=pTQlTPRwkheQOAax8FZ96qp6z40j6Ec6LCUL599rFTE';
 					var data={'attachment':s};
 					$vm.msflow(url,s);
-					*/
+					
 				})
-			})
-			//-------------------------------------
+				*/
 
 
 
 
-
-$vm.add_value_to_select=function($el, v){
-	var exists = false;
-	$el.find('option').each(function(index){
-		if (this.value == v) {
-			exists = true;
-			return false;
-		}
-	});    
-	if(exists==false){
-		$el.append(new Option(v, v));
-	}
-}
-$vm.deserialize=function(record,form_id){
-	if(record==undefined || record.Data==undefined) return;
-	$.each(record.Data, function(name, value){
-		if(name!=''){
-			var $els = $(form_id+' *[name='+name+']');
-			$els.each(function(){
-				var $el=$(this);
-				var type = $el.attr('type');
-				switch(type){
-					case 'checkbox':
-						if(value=='off' || value=='0' || value=='' || value==undefined ) $el.prop('checked', false);
-						else $el.prop('checked', true);
-						break;
-					case 'radio':
-						if($el.attr('value')==value){
-							$el.prop('checked', true);
-						}
-						break;
-					case 'file':
-						break;
-					case 'text':
-					case 'email':
-					case 'textarea':
-					case 'select':
-						$el.val(value);
-						break;
-					case 'undefined':
-						break;
-					default:
-						var type1=$(this).prop('nodeName');
-						switch(type1){
-							case "SELECT":
-								$vm.add_value_to_select($el,value);
-								$el.val(value);
-								break;
-							default: 
-								console.log(type+"---"+type1)				
-								$el.val(value); break;
-						}
-						break;
-				}
-			});
-		}
-	});
-}
 
 
 

@@ -260,6 +260,22 @@
             })
         }
         //-------------------------------------
+            /*
+            //-------------------------------------
+			$('#pdf1__ID').on('click',function(){
+				$vm.install_module('communal-ordering-pdf-form','content',{record:m.records[2]}, function(name,id){
+					$('#D'+id).show();
+					setTimeout(function(){
+						var mm=$vm.module_list[name];
+						mm.get_pdf_data(function(d){
+							d.pdf.save("order.pdf");
+							$('#D'+id).show();
+						})
+					},1)
+				});
+			})
+			//-------------------------------------
+            */
     }
 </script>
 <style>

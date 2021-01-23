@@ -65,6 +65,12 @@
             Table:"communal-ordering",
             description:"Communal ordering form",
         },
+        "communal-ordering-pdf-form":{
+            title:'Communal ordering pdf form',
+            url:$H+"/communal-ordering/record/form.html",
+            Table:"communal-ordering",
+            description:"Communal ordering pdf form",
+        },
         "communal-ordering-lab-manager-approval-form":{
             title:"Communal ordering lab manager approval",
             url:$H+"/communal-ordering/lab-manager-approval/form.html",
