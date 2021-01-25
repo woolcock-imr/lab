@@ -4,7 +4,11 @@
 <script>
     function F__ID(){
         //-------------------------------------
-        VmInclude:__COMPONENT__/g/grid.01.js
+        //VmInclude:__COMPONENT__/g/grid.01.js
+        //VmInclude:__CURRENT_PATH__data.html.lab_manager_approval.js
+        //VmInclude:__CURRENT_PATH__data.html.supervisor_approval.js
+        //VmInclude:__CURRENT_PATH__data.html.financial_approval.js
+        //VmInclude:__CURRENT_PATH__data.html.received_confirm.js
         //-------------------------------------
         var fields="Requestor_Name,Supplier_Name,Quotation,Total_Amount,Status";
         m.fields="_Form,_Request_ID,"+fields+",Submit_date,Submitted_by,_Lab_Manager_Approval,_Supervisor_Approval,_Financial_Approval,_Received,_Delete";
@@ -58,9 +62,6 @@
             }
         }
         //-------------------------------------
-        //var fields="Requestor_Name, Date, Type,Chemical_requested,Quantity_requested,Preferred_supplier,Consumable_requested, Status";
-        //m.fields="_Form,_Request_ID,"+fields+",Submit_date,Submitted_by,_Approved,_Processed,_Received,_Delete";
-        //-------------------------------------
         m.load=function(){
             if(m.self==1) m.options={self:1};
         }
@@ -80,202 +81,12 @@
                 uid_array.push(m.records[i].UID)
             }
             var query={ I2: { $in: uid_array } }
-            
             load_lab_manager_approval(query,options);
             load_supervisor_approval(query,options);
             load_financial_approval(query,options);
             load_received_confirm(query,options);
         }
         //-------------------------------------
-        var load_lab_manager_approval=function(query,options){
-            //load joined records parent.UID=child.I2
-            var cmd="find"; 
-            var table=m.lab_manager_approval_table;
-            var req={cmd:cmd,table:table,query:query,options:options}
-            $vm.request(req,function(res){
-                if(res.status=='np'){
-                    $("#grid__ID td[data-id=_Lab_Manager_Approval]").each(function(index){
-                        $(this).html('');
-                    })
-                }
-                //attach child record
-                if(res.result.length!=undefined){
-                    for(var k=0;k<res.result.length;k++){
-                        for(var j=0;j<m.records.length;j++){
-                            if(m.records[j].UID==res.result[k].I2){
-                                m.records[j].sys_child_lab=res.result[k];
-                                break;
-                            }
-                        }
-                    }
-                }
-                //rendering the column
-                $("#grid__ID td[data-id=_Lab_Manager_Approval]").each(function(index){
-                    if(m.records[index].sys_child_lab!=undefined){
-                        var tt="";
-                        if(m.records[index].sys_child_lab.Data.Action=='approve') tt="<i rid="+index+" style='color:green;padding-left:10px;cursor:pointer' class='fas fa-check'></i>"
-                        if(m.records[index].sys_child_lab.Data.Action=='denay')   tt="<i rid="+index+" style='color:red;padding-left:10px;cursor:pointer' class='fas fa-times'></i>"
-                        $(this).html(tt);
-                        $(this).find('i').on('click',function(){
-                            var k=parseInt($(this).attr('rid'));
-                            $vm.show_module(m.lab_manager_approval_module,{readonly:1, record:m.records[k].sys_child_lab, parent:m.records[k]});
-                        })
-                    }
-                    if(m.records[index].sys_child_lab==undefined || m.records[index].sys_child_lab.Data.action=='denay' ){
-                        $(this).next('td').html('');
-                        $(this).next('td').next('td').html('');
-                        $(this).next('td').next('td').next('td').html('');
-                        $(this).next('td').next('td').next('td').next('td').html('');
-                    }
-                });
-            })
-        }
-        //-------------------------------------
-        var load_supervisor_approval=function(query,options){
-            //load joined records parent.UID=child.I2
-            var cmd="find"; 
-            var table=m.supervisor_approval_table;
-            var req={cmd:cmd,table:table,query:query,options:options}
-            $vm.request(req,function(res){
-                if(res.status=='np'){
-                    $("#grid__ID td[data-id=_Supervisor_Approval]").each(function(index){
-                        $(this).html('');
-                    })
-                }
-                //attach child record
-                if(res.result.length!=undefined){
-                    for(var k=0;k<res.result.length;k++){
-                        for(var j=0;j<m.records.length;j++){
-                            if(m.records[j].UID==res.result[k].I2){
-                                m.records[j].sys_child_supervisor=res.result[k];
-                                break;
-                            }
-                        }
-                    }
-                }
-                //rendering the column
-                $("#grid__ID td[data-id=_Supervisor_Approval]").each(function(index){
-                    if(m.records[index].sys_child_supervisor!=undefined){
-                        var tt="";
-                        if(m.records[index].sys_child_supervisor.Data.Action=='approve') tt="<i rid="+index+" style='color:green;padding-left:10px;cursor:pointer' class='fas fa-check'></i>"
-                        if(m.records[index].sys_child_supervisor.Data.Action=='denay')   tt="<i rid="+index+" style='color:red;padding-left:10px;cursor:pointer' class='fas fa-times'></i>"
-                        $(this).html(tt);
-                        $(this).find('i').on('click',function(){
-                            var k=parseInt($(this).attr('rid'));
-                            $vm.show_module(m.supervisor_approval_module,{readonly:1, record:m.records[k].sys_child_supervisor, parent:m.records[k]});
-                        })
-                    }
-                    if(m.records[index].sys_child_supervisor==undefined || m.records[index].sys_child_supervisor.Data.action=='denay' ){
-                        $(this).next('td').html('');
-                        $(this).next('td').next('td').html('');
-                        $(this).next('td').next('td').next('td').html('');
-                    }
-                });
-            })
-        }
-        //-------------------------------------
-        var load_financial_approval=function(query,options){
-            //load joined records parent.UID=child.I2
-            var cmd="find"; 
-            var table=m.financial_approval_table;
-            var req={cmd:cmd,table:table,query:query,options:options}
-            $vm.request(req,function(res){
-                if(res.status=='np'){
-                    $("#grid__ID td[data-id=_Financial_Approval]").each(function(index){
-                        $(this).html('');
-                    })
-                }
-                //attach child record
-                if(res.result.length!=undefined){
-                    for(var k=0;k<res.result.length;k++){
-                        for(var j=0;j<m.records.length;j++){
-                            if(m.records[j].UID==res.result[k].I2){
-                                m.records[j].sys_child_financial=res.result[k];
-                                break;
-                            }
-                        }
-                    }
-                }
-                //rendering the column
-                $("#grid__ID td[data-id=_Financial_Approval]").each(function(index){
-                    if(m.records[index].sys_child_financial!=undefined){
-                        var tt="";
-                        if(m.records[index].sys_child_financial.Data.Action=='approve') tt="<i rid="+index+" style='color:green;padding-left:10px;cursor:pointer' class='fas fa-check'></i>"
-                        if(m.records[index].sys_child_financial.Data.Action=='denay')   tt="<i rid="+index+" style='color:red;padding-left:10px;cursor:pointer' class='fas fa-times'></i>"
-                        $(this).html(tt);
-                        $(this).find('i').on('click',function(){
-                            var k=parseInt($(this).attr('rid'));
-                            $vm.show_module(m.financial_approval_module,{readonly:1, record:m.records[k].sys_child_financial, parent:m.records[k]});
-                        })
-                    }
-                    if(m.records[index].sys_child_financial==undefined || m.records[index].sys_child_financial.Data.action=='denay' ){
-                        if(parseFloat(m.records[index].Data.Total_Amount)>3000){
-                            $(this).next('td').html('');
-                            $(this).next('td').next('td').html('');
-                        }
-                    }
-                });
-            })
-        }
-        //-------------------------------------
-        var load_received_confirm=function(query,options){
-            //load joined records parent.UID=child.I2
-            var cmd="find"; 
-            var table=m.receive_table;
-            var req={cmd:cmd,table:table,query:query,options:options}
-            $vm.request(req,function(res){
-                if(res.status=='np'){
-                    $("#grid__ID td[data-id=_Received]").each(function(index){
-                        $(this).html('');
-                    })
-                }
-                //attach child record
-                if(res.result.length!=undefined){
-                    for(var k=0;k<res.result.length;k++){
-                        for(var j=0;j<m.records.length;j++){
-                            if(m.records[j].UID==res.result[k].I2){
-                                m.records[j].sys_child_received=res.result[k];
-                                break;
-                            }
-                        }
-                    }
-                }
-                //rendering the column
-                $("#grid__ID td[data-id=_Received]").each(function(index){
-                    if(m.records[index].sys_child_received!=undefined){
-                        var tt="";
-                        tt="<i rid="+index+" style='color:green;padding-left:10px;cursor:pointer' class='fas fa-check'></i>"
-                        //if(m.records[index].sys_child_received.Data.Action=='approve') tt="<i rid="+index+" style='color:green;padding-left:10px;cursor:pointer' class='fas fa-check'></i>"
-                        //if(m.records[index].sys_child_received.Data.Action=='denay')   tt="<i rid="+index+" style='color:red;padding-left:10px;cursor:pointer' class='fas fa-times'></i>"
-                        $(this).html(tt);
-                        $(this).find('i').on('click',function(){
-                            var k=parseInt($(this).attr('rid'));
-                            $vm.show_module(m.receive_module,{readonly:1, record:m.records[k].sys_child_received, parent:m.records[k]});
-                        })
-                    }
-                    if(m.records[index].sys_child_received==undefined || m.records[index].sys_child_received.Data.action=='denay' ){
-                        //no next
-                    }
-                });
-            })
-        }
-        //-------------------------------------
-            /*
-            //-------------------------------------
-			$('#pdf1__ID').on('click',function(){
-				$vm.install_module('communal-ordering-pdf-form','content',{record:m.records[2]}, function(name,id){
-					$('#D'+id).show();
-					setTimeout(function(){
-						var mm=$vm.module_list[name];
-						mm.get_pdf_data(function(d){
-							d.pdf.save("order.pdf");
-							$('#D'+id).show();
-						})
-					},1)
-				});
-			})
-			//-------------------------------------
-            */
     }
 </script>
 <style>

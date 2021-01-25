@@ -102,41 +102,23 @@
 
         
 
-
-
-        /*
-        "communal-ordering-approval-form":{
-            title:"Communal ordering approval",
-            url:$H+"/communal-ordering/approval/form.html",
-            Table:"communal-ordering-approval",
-            parent_table:"communal-ordering",
-            description:"Communal ordering approval",
-        },
-        "communal-ordering-process-form":{
-            title:"Communal ordering processing",
-            url:$H+"/communal-ordering/process/form.html",
-            Table:"communal-ordering-process",
-            parent_table:"communal-ordering",
-            description:"Communal ordering process",
-        },
         "communal-ordering-diagram":{
             title:"Communal ordering diagram",
             url:$H+"/communal-ordering/diagram/diagram.html",
             description:"Communal ordering diagram",
             router:1,
         },
-        */
 
 
         "communal-ordering-company-data":{
             title:'Company records',
-            url:$H+"/company/data.html",
+            url:$H+"/supplier/data.html",
             Table:"communal-ordering-company",
             form_module:"communal-ordering-company-form", 
         },
         "communal-ordering-company-form":{
             title:'Company form',
-            url:$H+"/company/form.html",
+            url:$H+"/supplier/form.html",
             Table:"communal-ordering-company",
         },
         "communal-ordering-supervisor-data":{

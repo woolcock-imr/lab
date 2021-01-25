@@ -177,7 +177,14 @@
                 })
             }
             //------------------------------------
+            //app 
             $vm.install_module('communal-ordering-pdf-form','content',{},function(name,id){});
+            $vm.emails={};
+            $vm.emails['to_lab_manager']=$vm.api_address+"/email/to_lab_manager";
+            $vm.emails['to_supervisor']=$vm.api_address+"/email/to_supervisor";
+            $vm.emails['to_finance']=$vm.api_address+"/email/to_finance";
+            $vm.emails['to_supplier']=$vm.api_address+"/email/to_supplier";
+            $vm.emails['to_requestor']=$vm.api_address+"/email/to_requester";
             //------------------------------------
         }
         //--------------------------------------
