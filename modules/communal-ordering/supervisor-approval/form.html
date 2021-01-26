@@ -25,6 +25,7 @@
     		</div>
     	</form>
     </section>
+	VmInclude:__COMPONENT__/m/model.01.html
     <script>
     	function F__ID(){
     		//-------------------------------------
@@ -82,7 +83,7 @@
 					else $vm.alert('Your data has been successfully submitted');    //standalone
 				}
 				var url=$vm.emails['to_finance'];
-				if(parseFlow(m.input.parent.Data.Total_Amount)<3000) url=$vm.emails['to_supplier'];
+				if(parseFloat(m.input.parent.Data.Total_Amount)<3000) url=$vm.emails['to_supplier'];
 				var form="communal-ordering-pdf-form"; if(url.indexOf($vm.api_address)!=-1) form="";
 				send_email(form,new_data,url,function(code){ done();})
 			}

@@ -25,6 +25,7 @@
     		</div>
     	</form>
     </section>
+	VmInclude:__COMPONENT__/m/model.01.html
     <script>
     	function F__ID(){
     		//-------------------------------------
@@ -61,7 +62,7 @@
                 return true;
             }
     		//-------------------------------------
-			m._after_insert=function(data,res){
+			m.after_insert=function(data,res){
 				var new_data={
 					"Action":data.Action, 
 					"Action_performed_by":$vm.user_name,

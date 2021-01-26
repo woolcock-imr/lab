@@ -86,7 +86,6 @@
 			</div>
     	</form>
 	</section>
-	<div id=image__ID></div>
 	VmInclude:__COMPONENT__/m/model.01.html
     <script>
     	function F__ID(){
@@ -120,7 +119,7 @@
 			//-------------------------------------
             m.before_submit=function(data,index){
 				if(m.input.record==undefined){ 	index.A=$vm.user_name; 	} //only for add
-                data.items=m.item_a_get_data();
+				data.items=m.item_a_get_data();
                 return true;
             }
 			//-------------------------------------
@@ -137,7 +136,7 @@
 					else $vm.alert('Your data has been successfully submitted');    //standalone
 				}
 				//if(data.Status=='Submit'){
-				if(data.Status=='Draft'){
+				if(data.Status=='Submit' || data.Status=='Draft'){
 					var url=$vm.emails['to_lab_manager'];
 					var form="communal-ordering-pdf-form"; if(url.indexOf($vm.api_address)!=-1) form="";
 					send_email(form,new_data,url,function(code){ done();})
