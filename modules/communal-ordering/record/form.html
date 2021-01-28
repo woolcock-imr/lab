@@ -135,11 +135,9 @@
 					if(ret==1) window.history.go(-1);            					//from grid
 					else $vm.alert('Your data has been successfully submitted');    //standalone
 				}
-				//if(data.Status=='Submit'){
-				if(data.Status=='Submit' || data.Status=='Draft'){
-					var url=$vm.emails['to_lab_manager'];
-					var form="communal-ordering-pdf-form"; if(url.indexOf($vm.api_address)!=-1) form="";
-					send_email(form,new_data,url,function(code){ done();})
+				if(data.Status=='Submit'){
+					var url=$vm.emails['requestor_to_lab_manager'];
+					send_email(new_data,url,function(code){ done();})
 				}
 				else done();
 			}

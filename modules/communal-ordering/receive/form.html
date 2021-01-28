@@ -50,15 +50,7 @@
             }
     		//-------------------------------------
 			m.after_insert=function(data,res){
-				var new_data={
-					"Action":data.Action, 
-					"Action_performed_by":$vm.user_name,
-					"Date":new Date().toLocaleString(),
-					"Request_ID":m.input.UID,
-					"Reason":data.Reason,
-					"Requestor_Email":m.input.parent.Data.Requestor_Email,
-					"Requestor_Name":m.input.parent.Data.Requestor_Name
-				}
+				var new_data=m.input.parent.Data;
 				var done=function(){
 					var ret=0,rid=undefined; if(m.input!=undefined && m.input.record!=undefined) rid=m.input.record._id;
 					if(m.input.goback!=undefined || rid!=undefined ) ret=1;	
@@ -67,9 +59,8 @@
 					if(ret==1) window.history.go(-1);            					//from grid
 					else $vm.alert('Your data has been successfully submitted');    //standalone
 				}
-				var url=$vm.emails['to_requestor'];
-				var form="communal-ordering-pdf-form"; if(url.indexOf($vm.api_address)!=-1) form="";
-				send_email(form,new_data,url,function(code){ done();})
+				var url=$vm.emails['reception_to_finance_and_requestor'];
+				send_email(new_data,url,function(code){ done();})
 			}
 			//-------------------------------------
     	}

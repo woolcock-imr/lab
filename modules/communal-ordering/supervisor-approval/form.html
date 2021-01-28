@@ -63,17 +63,9 @@
             }
     		//-------------------------------------
 			m.after_insert=function(data,res){
-				var new_data={
-					"Action":data.Action, 
-					"Action_performed_by":$vm.user_name,
-					"Date":new Date().toLocaleString(),
-					"Request_ID":m.input.UID,
-					"Reason":data.Reason,
-					"Requestor_Email":m.input.parent.Data.Requestor_Email,
-					"Requestor_Name":m.input.parent.Data.Requestor_Name,
-					"Supplier_Email":m.input.parent.Data.Supplier_Email,
-					"Supplier_Name":m.input.parent.Data.Supplier_Name
-				}
+				var new_data=m.input.parent.Data;
+				new_data.Action=data.Action;
+				new_data.Reason=data.Reason;
 				var done=function(){
 					var ret=0,rid=undefined; if(m.input!=undefined && m.input.record!=undefined) rid=m.input.record._id;
 					if(m.input.goback!=undefined || rid!=undefined ) ret=1;	
@@ -82,10 +74,17 @@
 					if(ret==1) window.history.go(-1);            					//from grid
 					else $vm.alert('Your data has been successfully submitted');    //standalone
 				}
-				var url=$vm.emails['to_finance'];
-				if(parseFloat(m.input.parent.Data.Total_Amount)<3000) url=$vm.emails['to_supplier'];
-				var form="communal-ordering-pdf-form"; if(url.indexOf($vm.api_address)!=-1) form="";
-				send_email(form,new_data,url,function(code){ done();})
+				switch(data.Action){
+					case "approve":
+						var url=$vm.emails['supervisor_to_finance']; 
+						if(parseFloat(m.input.parent.Data.Total_Amount)<=3000) url=$vm.emails['supervisor_to_supplier'];
+						send_email(new_data,url,function(code){ done();})
+						break;
+					case "deny":
+						var url=$vm.emails['supervisor_to_requestor_deny']; 
+						send_email(new_data,url,function(code){ done();})
+						break;
+				}
 			}
 			//-------------------------------------
     	}

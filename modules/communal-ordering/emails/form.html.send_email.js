@@ -1,5 +1,7 @@
 ﻿//-----------------------------------------
-var send_email=function(form,data,url,callback){
+var send_email=function(data,url,callback){
+    var form="communal-ordering-pdf-form";
+    if(url.indexOf($vm.api_address)!=-1) form="";
     var ddd={};
     for(a in data){
         ddd[a]=data[a];
