@@ -29,8 +29,16 @@
 						<input type=text name=Supplier_Phone />
 					</div>
 					<div w='100|50'>
+						<span>Supplier Fax</span>
+						<input type=text name=Supplier_Fax />
+					</div>
+					<div w='100|50'>
 						<span>Supplier Account_Number</span>
 						<input type=text name=Supplier_Account_Number />
+					</div>
+					<div w='100|50'>
+						<span>Supplier Address</span>
+						<textarea name=Supplier_Address style='min-height:120px'></textarea>
 					</div>
 				</div>
 				<div>
@@ -53,12 +61,22 @@
 				</div>
 				<div>
 					<div w='100|100'>
-						<span>Quotation</span>
+						<span>Deliver Address</span>
+						<textarea name=Deliver_Address style='min-height:120px'></textarea>
+					</div>
+				</div>
+				<div>
+					<div w='100|100'>
+						<span>Quotation File</span>
 						<div class="form-control" style='height: 80px;'>
                             <u style='cursor:pointer' id=link_Quotation__ID></u>
                             <br>
                             <input type="file" name=Quotation style="margin-top:6px" /> <button class=c_print type="button" id=x_Quotation__ID style='margin-left:30px'>Remove</button>
                         </div>
+    				</div>
+					<div w='100|100'>
+						<span>Quotation Number</span>
+						<input type=text name=Quotation_Number />
     				</div>
 				</div>
 			</div>
@@ -68,8 +86,10 @@
 					<u class=c_print style='cursor:pointer;margin-bottom:3px;display:inline-block' id=item_a_add__ID><i class="fa fa-plus"></i> Add an item</u>
 					<table id=grid_item_a__ID></table>
 					<div id=total__ID style='text-align: right;padding-top:6px'>
-							GST Amount: <input type=text name=GST_Amount style="width:120px;margin-bottom:1px" readonly><br>
-							Total Amount: <input type=text name=Total_Amount style="width:120px" readonly>
+							Sub Total: <input type=text name=Sub_Total style="width:120px;margin-bottom:1px" readonly><br>
+							Delivery: <input type=text name=Delivery style="width:120px;margin-bottom:1px"><br>
+							10% GST: <input type=text name=GST_Amount style="width:120px;margin-bottom:1px" readonly><br>
+							Grand Amount: <input type=text name=Total_Amount style="width:120px" readonly>
 					</div>
 				</div>
 			</div>
@@ -135,7 +155,8 @@
 					if(ret==1) window.history.go(-1);            					//from grid
 					else $vm.alert('Your data has been successfully submitted');    //standalone
 				}
-				if(data.Status=='Submit'){
+				if(data.Status=='Draft'){
+				//if(data.Status=='Submit'){
 					var url=$vm.emails['requestor_to_lab_manager'];
 					send_email(new_data,url,function(code){ done();})
 				}

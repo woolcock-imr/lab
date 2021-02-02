@@ -30,6 +30,7 @@
             financial_approval_table:"communal-ordering-financial-approval",
             receive_module:prefix+'communal-ordering-receive-form',
             receive_table:"communal-ordering-receive",
+            print:"communal-ordering-print",
         },
         "communal-ordering-form-self":{
             title:'Communal ordering form',
@@ -38,6 +39,7 @@
             
             supplier_table:"communal-ordering-company",
             supervisor_table:"communal-ordering-supervisor",
+            print:"communal-ordering-print",
             
             description:"Communal ordering form",
             self:1,
@@ -49,6 +51,7 @@
             Table:"communal-ordering",
             form_module:"communal-ordering-form", 
             description:"Communal ordering data",
+            router:1,
             
             lab_manager_approval_module:prefix+'communal-ordering-lab-manager-approval-form',
             lab_manager_approval_table:"communal-ordering-lab-manager-approval",
@@ -58,12 +61,19 @@
             financial_approval_table:"communal-ordering-financial-approval",
             receive_module:prefix+'communal-ordering-receive-form',
             receive_table:"communal-ordering-receive",
+            print:"communal-ordering-print",
         },
         "communal-ordering-form":{
             title:'Communal ordering form',
             url:$H+"/communal-ordering/record/form.html",
             Table:"communal-ordering",
             description:"Communal ordering form",
+            print:"communal-ordering-print",
+        },
+        "communal-ordering-print":{
+            title:'Communal ordering form print version',
+            url:$H+"/communal-ordering/record/print.html",
+            description:"Communal ordering form print version",
         },
         "communal-ordering-pdf-form":{
             title:'Communal ordering pdf form',

@@ -17,7 +17,9 @@
 					if(supplier[i].Data.Name==name){
 						$('#F__ID input[name=Supplier_Email]').val(supplier[i].Data.Email);
 						$('#F__ID input[name=Supplier_Phone]').val(supplier[i].Data.Phone);
+						$('#F__ID input[name=Supplier_Fax]').val(supplier[i].Data.Fax);
 						$('#F__ID input[name=Supplier_Account_Number]').val(supplier[i].Data.Account_Number);
+						$('#F__ID textarea[name=Supplier_Address]').val(supplier[i].Data.Address);
 						break;
 					}
 				}
