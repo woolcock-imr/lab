@@ -30,7 +30,8 @@
     	function F__ID(){
     		//-------------------------------------
 			//VmInclude:__COMPONENT__/f/form.01.js
-            //VmInclude:__CURRENT_PATH__../emails/form.html.send_email.js
+            //VmInclude:__CURRENT_PATH__../email-and-print/form.html.formatted-string.js
+            //VmInclude:__CURRENT_PATH__../email-and-print/form.html.send-email.js
 			new ResizeObserver($vm.responsive).observe(form_container__ID);
     		//-------------------------------------
 			var old_m_load=m.load;
@@ -63,7 +64,7 @@
             }
     		//-------------------------------------
 			m.after_insert=function(data,res){
-				var new_data=m.input.parent.Data;
+				var new_data=m.input.parent;
 				new_data.Action=data.Action;
 				new_data.Reason=data.Reason;
 				var done=function(){
@@ -77,11 +78,11 @@
 				switch(data.Action){
 					case "approve":
 						var url=$vm.emails['lab_manager_to_supervisor']; 
-						send_email(new_data,url,function(code){ done();})
+						m.send_email(new_data,url,function(code){ done();})
 						break;
 					case "deny":
 						var url=$vm.emails['lab_manager_to_requester_deny']; 
-						send_email(new_data,url,function(code){ done();})
+						m.send_email(new_data,url,function(code){ done();})
 						break;
 				}
 			}

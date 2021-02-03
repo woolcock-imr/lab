@@ -23,7 +23,8 @@
     	function F__ID(){
     		//-------------------------------------
 			//VmInclude:__COMPONENT__/f/form.01.js
-            //VmInclude:__CURRENT_PATH__../emails/form.html.send_email.js
+            //VmInclude:__CURRENT_PATH__../email-and-print/form.html.formatted-string.js
+            //VmInclude:__CURRENT_PATH__../email-and-print/form.html.send-email.js
 			new ResizeObserver($vm.responsive).observe(form_container__ID);
     		//-------------------------------------
 			var old_m_load=m.load;
@@ -50,7 +51,7 @@
             }
     		//-------------------------------------
 			m.after_insert=function(data,res){
-				var new_data=m.input.parent.Data;
+				var new_data=m.input.parent;
 				var done=function(){
 					var ret=0,rid=undefined; if(m.input!=undefined && m.input.record!=undefined) rid=m.input.record._id;
 					if(m.input.goback!=undefined || rid!=undefined ) ret=1;	
@@ -60,7 +61,7 @@
 					else $vm.alert('Your data has been successfully submitted');    //standalone
 				}
 				var url=$vm.emails['reception_to_finance_and_requestor'];
-				send_email(new_data,url,function(code){ done();})
+				m.send_email(new_data,url,function(code){ done();})
 			}
 			//-------------------------------------
     	}
