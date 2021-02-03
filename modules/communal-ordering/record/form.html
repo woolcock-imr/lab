@@ -115,7 +115,8 @@
             //VmInclude:__CURRENT_PATH__form.html.drop_down_list.js
             //VmInclude:__CURRENT_PATH__form.html.item_a_list.js
             //VmInclude:__CURRENT_PATH__form.html.pdf_data.js
-            //VmInclude:__CURRENT_PATH__../emails/form.html.send_email.js
+            //VmInclude:__CURRENT_PATH__../email-and-print/form.html.formatted-string.js
+            //VmInclude:__CURRENT_PATH__../email-and-print/form.html.send-email.js
 			new ResizeObserver($vm.responsive).observe(form_container__ID);
 			m.storage_type='s0';
 			item_a_list();
@@ -143,10 +144,13 @@
                 return true;
             }
 			//-------------------------------------
-			m.after_insert=function(data,res){ after_submit(data,res); }
-			m.after_update=function(data,res){ after_submit(data,res); }
-			var after_submit=function(data,res){
-				var new_data=data;
+			m.after_insert=function(data,res){ after_submit(data,res,res.nr.UID,res.nr.Submit_date); }
+			m.after_update=function(data,res){ after_submit(data,res,res.result.UID,res.result.Submit_date); }
+			var after_submit=function(data,res,UID,s_date){
+				//console.log(UID)
+				//console.log(s_date)
+				
+				var new_data={Data:data,UID:UID,Submit_date:s_date};
 				var done=function(){
 					var ret=0,rid=undefined; if(m.input!=undefined && m.input.record!=undefined) rid=m.input.record._id;
 					if(m.input.goback!=undefined || rid!=undefined ) ret=1;	
@@ -158,9 +162,10 @@
 				if(data.Status=='Draft'){
 				//if(data.Status=='Submit'){
 					var url=$vm.emails['requestor_to_lab_manager'];
-					send_email(new_data,url,function(code){ done();})
+					m.send_email(new_data,url,function(code){ done();})
 				}
 				else done();
+				
 			}
 			//-------------------------------------
 		}

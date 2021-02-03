@@ -9,6 +9,8 @@
         //VmInclude:__CURRENT_PATH__data.html.supervisor_approval.js
         //VmInclude:__CURRENT_PATH__data.html.financial_approval.js
         //VmInclude:__CURRENT_PATH__data.html.received_confirm.js
+        //VmInclude:__CURRENT_PATH__../email-and-print/form.html.formatted-string.js
+        //VmInclude:__CURRENT_PATH__../email-and-print/form.html.print.js
         //-------------------------------------
         var fields="Requestor_Name,Supplier_Name,Quotation,Total_Amount,Status";
         m.fields="_Form,_Print_Version,_Request_ID,"+fields+",Submit_date,Submitted_by,_Lab_Manager_Approval,_Supervisor_Approval,_Financial_Approval,_Received,_Delete";
@@ -21,7 +23,7 @@
                 case '_Print_Version':
                     td.html("<u style='cursor:pointer'>Print Version</u>");
                     td.find('u').on('click',function(){
-                        open_print_page(records[I]);
+                        m.print(records[I]);
                     });
                     break;
                 case 'Total_Amount':
@@ -67,6 +69,7 @@
             }
         }
         //-------------------------------------
+        /*
         var open_print_page=function(record){
             $.get($vm.module_list[m.print].url,function(txt){
                 var d=record.Submit_date.substring(0,10).replace(/-/g,'');
@@ -130,6 +133,7 @@
                 w.document.body.innerHTML=txt;
             },'text');
         }
+        */
         m.load=function(){
             if(m.self==1) m.options={self:1};
         }
