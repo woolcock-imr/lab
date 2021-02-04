@@ -16,7 +16,7 @@
         "management":{url:$vm.hosting_path+"/modules/panels/management.html",description:"panel",router:1},
         "communal-ordering-data-self":{
             title:'My communal ordering records',
-            url:$H+"/communal-ordering/record/data.html",
+            url:$H+"/communal-ordering/order/data.html",
             Table:"communal-ordering",
             form_module:"communal-ordering-form-self", 
             description:"Communal ordering data",
@@ -34,7 +34,7 @@
         },
         "communal-ordering-form-self":{
             title:'Communal ordering form',
-            url:$H+"/communal-ordering/record/form.html",
+            url:$H+"/communal-ordering/order/form.html",
             Table:"communal-ordering",
             
             supplier_table:"communal-ordering-company",
@@ -47,7 +47,7 @@
         },
         "communal-ordering-data":{
             title:'Communal ordering records',
-            url:$H+"/communal-ordering/record/data.html",
+            url:$H+"/communal-ordering/order/data.html",
             Table:"communal-ordering",
             form_module:"communal-ordering-form", 
             description:"Communal ordering data",
@@ -65,19 +65,24 @@
         },
         "communal-ordering-form":{
             title:'Communal ordering form',
-            url:$H+"/communal-ordering/record/form.html",
+            url:$H+"/communal-ordering/order/form.html",
             Table:"communal-ordering",
             description:"Communal ordering form",
             print:"communal-ordering-print",
         },
+        "communal-ordering-print-version-template":{
+            url:$H+"/communal-ordering/order/print-version-template.html",
+        },
+        /*
         "communal-ordering-print":{
             title:'Communal ordering form print version',
-            url:$H+"/communal-ordering/record/print.html",
+            url:$H+"/communal-ordering/order/print-version.html",
             description:"Communal ordering form print version",
         },
+        */
         "communal-ordering-pdf-form":{
             title:'Communal ordering pdf form',
-            url:$H+"/communal-ordering/record/form.html",
+            url:$H+"/communal-ordering/order/form.html",
             Table:"communal-ordering",
             description:"Communal ordering pdf form",
         },
