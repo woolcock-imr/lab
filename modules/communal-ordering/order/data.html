@@ -13,7 +13,7 @@
         //VmInclude:__CURRENT_PATH__print-form.js
         //-------------------------------------
         var fields="Requestor_Name,Supplier_Name,Quotation,Total_Amount,Status";
-        m.fields="_Form,_Print_Version,_Request_ID,"+fields+",Submit_date,Submitted_by,_Lab_Manager_Approval,_Supervisor_Approval,_Financial_Approval,_Received,_Delete";
+        m.fields="_Form,_Print_Version,_PDF,_Request_ID,"+fields+",Submit_date,Submitted_by,_Lab_Manager_Approval,_Supervisor_Approval,_Financial_Approval,_Received,_Delete";
         //-------------------------------------
         m.cell_render=function(records,I,field,td){
             switch(field){
@@ -23,7 +23,14 @@
                 case '_Print_Version':
                     td.html("<u style='cursor:pointer'>Print Version</u>");
                     td.find('u').on('click',function(){
-                        m.print(records[I]);
+                        m.print_html(records[I]);
+                    });
+                    break;
+                case '_PDF':
+                    td.html("<u style='cursor:pointer'>PDF</u>");
+                    td.find('u').on('click',function(){
+                        m.print_pdf(records[I],'order.pdf');
+                        //m.b64Str_pdf(records[I])
                     });
                     break;
                 case 'Total_Amount':

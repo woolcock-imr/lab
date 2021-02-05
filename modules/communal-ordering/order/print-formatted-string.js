@@ -17,7 +17,7 @@ m.get_order_print_string=function(record){
                                 </table>
                             </td>
                             <td style='width:40%'>
-                                <img src='http://image.rt.org.au/logo.jpg' width="300"/>
+                            <img src='http://localhost:8000/woolcock-imr/lab/images/logo.jpg' width="300"/>
                                 <br>
                                 <br>
                                 <br>

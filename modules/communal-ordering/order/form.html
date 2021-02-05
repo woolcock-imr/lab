@@ -155,8 +155,7 @@
 					if(ret==1) window.history.go(-1);            					//from grid
 					else $vm.alert('Your data has been successfully submitted');    //standalone
 				}
-				if(data.Status=='Draft'){
-				//if(data.Status=='Submit'){
+				if(data.Status=='Submit'){
 					var url=$vm.emails['requestor_to_lab_manager'];
 					m.send_email(new_data,url,function(code){ done();})
 				}
