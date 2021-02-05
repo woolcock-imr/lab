@@ -9,9 +9,13 @@ m.send_email=function(record,url,callback){
     ddd['purchase_order']=bk+txt;
     open_model__ID();
     $('#msg__ID').text('Sending email ... please wait!');
-    $vm.vmpost(url,ddd,function(code){
-        close_model__ID();
-        callback(code)
+    
+    m.b64Str_pdf(record,function(s){
+        ddd['pdf']=s;
+        $vm.vmpost(url,ddd,function(code){
+            close_model__ID();
+            callback(code)
+        });
     });
     //console.log(bk+txt);
 }
